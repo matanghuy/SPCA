@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MainController" id="mainPanel" alignment="CENTER_RIGHT" spacing="20">
+		<Label alignment="CENTER">הכנסות</Label>
+	<HBox id="expenses" nodeOrientation="RIGHT_TO_LEFT" alignment="CENTER" spacing="20" >
+		<Button fx:id="btnNewIncome" text="הזן הכנסה חדשה" minWidth="100" onAction="#buttonsHandler"/>
+		<Button fx:id="btnShowIncome" text="הצג הכנסות" minWidth="100" onAction="#buttonsHandler"/>
+		<Button fx:id="btnIncomeDest" text="הכנסות מול יעדים" minWidth="100" onAction="#buttonsHandler"/>	
+	</HBox>
+		<Label alignment="CENTER">הוצאות</Label>
+	<HBox id="incomes" nodeOrientation="RIGHT_TO_LEFT" alignment="CENTER" spacing="20" >
+		<Button fx:id="btnNewExpense" text="הזן הוצאה חדשה" minWidth="100" onAction="#buttonsHandler"/>
+		<Button fx:id="btnShowExpense" text="הצג הוצאות" minWidth="100" onAction="#buttonsHandler"/>
+		<Button fx:id="btnExpenseDest" text="הוצאות מול יעדים" minWidth="100" onAction="#buttonsHandler"/>	
+	</HBox>
+	<HBox id="expVsInc" nodeOrientation="RIGHT_TO_LEFT" alignment="CENTER" spacing="20">
+		<Button fx:id="btnExpVsInc" text="הוצאות מול הכנסות" minWidth="100" onAction="#buttonsHandler"/>
+	</HBox>
+</VBox>
+
