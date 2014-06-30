@@ -26,7 +26,7 @@
 	<padding>
 		<Insets top="20" bottom="20" left="20" right="20" />
 	</padding>
-	<Label text="הוצאה/הכנסה חדשה”" alignment="BASELINE_CENTER" />
+	<Label text="הוצאה/הכנסה חדשה" alignment="BASELINE_CENTER" />
 	<HBox id="datePane"  spacing="15">
 		<Label id="date" alignment="BASELINE_CENTER" text="תאריך" />
 		<ComboBox fx:id="year" />
