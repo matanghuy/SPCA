@@ -1,3 +1,4 @@
+package main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,8 +14,8 @@ public class Main extends Application{
 	}
 	public void start(final Stage primaryStage) {
 		try {
-			
-			Parent root = (Parent)FXMLLoader.load(getClass().getResource("newTransaction.fxml"));
+			System.out.println(getClass().getResource("."));
+			Parent root = (Parent)FXMLLoader.load(getClass().getResource("../newTransaction.fxml"));
 			Scene scene = new Scene(root,800,600);
 			primaryStage.setScene(scene);
 			primaryStage.show();

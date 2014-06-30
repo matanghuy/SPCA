@@ -3,19 +3,13 @@ package controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.sun.prism.paint.Color;
-
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Paint;
 
 public class AddContact  implements Initializable{
