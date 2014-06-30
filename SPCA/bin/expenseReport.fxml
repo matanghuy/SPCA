@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+
+<VBox fx:controller="controllers.expenseReport" spacing="20"
+	alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" xmlns:fx="http://javafx.com/fxml">
+	<padding>
+		<Insets  top="20" bottom="20" left="20" right="20" />
+	</padding>
+	<Label  text="דו״חות" alignment="BASELINE_CENTER" />
+	<HBox  id="datePane"  spacing="15">
+		<Label id="date" alignment="BASELINE_CENTER" text="תאריך" />
+		<ComboBox  fx:id="year" />
+		<ComboBox fx:id="month" />
+		<ComboBox  fx:id="day" />
+		<Label text="       "/>
+		<Label text="קטגוריה"/>
+		<ComboBox fx:id="category"/>
+	</HBox>
+</VBox>
+

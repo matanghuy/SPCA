@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="jdbcAppender" class="org.apache.log4j.jdbc.JDBCAppender" > 
+        <param name="URL" value="jdbc:sqlserver://212.150.101.150\\MSSQLSERVER2008;databaseName=SPCA" /> 
+        <param name="Driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" /> 
+        <param name="User" value="Guy_SPCA" /> 
+        <param name="Password" value="1GWb6vUM" /> 
+        <param name="Threshold" value="ERROR"/>
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" 
+              value="INSERT INTO [SPCA].[Common].[Logs] (log_level, location, message) VALUES ( '%p','%C;%L', '%m' )" 
+            /> 
+        </layout> 
+    </appender> 
+
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">    	
+        <layout class="org.apache.log4j.PatternLayout"> 
+            <param name="ConversionPattern" 
+              value="%d{ISO8601} %p (%C;%L) %m%n" 
+            />      
+        </layout>     
+    </appender> 
+    
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+	   <param name="file" value="Logs/log.log"/>
+	   <param name="immediateFlush" value="true"/>
+	   <param name="threshold" value="debug"/>
+	   <param name="append" value="true"/>
+	   <param name="DatePattern" value="'.'dd-MM-yyyy'.log'"/>  
+	   <layout class="org.apache.log4j.PatternLayout">
+	      <param name="conversionPattern" value="[%d{ISO8601}] : %p - %C;%L - %m%n"/>
+	   </layout>
+	</appender>
+	
+    <logger name="logging.simple.jdbcLogger"> 
+        <level value="debug"/> 
+        <appender-ref ref="jdbcAppender"/> 
+    </logger> 
+
+    <root> 
+        <level value="debug"/> 
+        <appender-ref ref="STDOUT"/> 
+        <appender-ref ref="jdbcAppender"/>
+        <appender-ref ref="FILE"/>
+    </root> 
+
+</log4j:configuration>
