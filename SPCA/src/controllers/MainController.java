@@ -45,7 +45,7 @@ public class MainController implements Initializable {
 			windowName = "newTransaction.fxml";
 			break;
 		case "btnShowIncome":
-			windowName = "newTransaction.fxml";
+			windowName = "incomingReport.fxml";
 			break;
 		case "btnIncomeDest":
 			windowName = "newTransaction.fxml";
@@ -54,7 +54,7 @@ public class MainController implements Initializable {
 			windowName = "newTransaction.fxml";
 			break;
 		case "btnShowExpense":
-			windowName = "expenseReport.fxml";
+			windowName = "expensesReport.fxml";
 			break;
 		case "btnExpenseDest":
 			windowName = "newTransaction.fxml";
@@ -68,8 +68,8 @@ public class MainController implements Initializable {
 	private void createNewWindow(String windowName) {
 		try {
 			Stage dialog = new Stage();
-			System.out.println(getClass().getClassLoader().getResource("../fxml/"+windowName));
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(windowName));
+			System.out.println(getClass().getResource("../fxml/"+windowName));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/"+windowName));
 			Parent root = (Parent) loader.load();
 			Scene scene = new Scene(root, 800, 600);
 			dialog.setScene(scene);

@@ -15,7 +15,7 @@ public class Main extends Application{
 	public void start(final Stage primaryStage) {
 		try {
 			System.out.println(getClass().getResource("."));
-			Parent root = (Parent)FXMLLoader.load(getClass().getResource("../fxml/MainMenu.fxml"));
+			Parent root = (Parent)FXMLLoader.load(getClass().getResource("../fxml/AddContact.fxml"));
 			Scene scene = new Scene(root,600,400);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -23,5 +23,6 @@ public class Main extends Application{
 			e.printStackTrace();
 		}
 	}
+	
 
 }

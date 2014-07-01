@@ -1,8 +1,16 @@
 package controllers;
 
+import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
+import spca.datalayer.DataContext;
+import spca.datalayer.SpcaDataLayerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,18 +23,26 @@ import javafx.scene.paint.Paint;
 public class AddContact  implements Initializable{
 
 	
-	@FXML TextField fullName;
+	@FXML TextField firstName;
+	@FXML TextField lastName;
 	@FXML TextField phoneNumber;
+	@FXML TextField bDate;
 	@FXML TextField email;
+	@FXML TextField lbDate;
 	@FXML TextField fullAddress;
 	@FXML TextField country;
+	@FXML TextField identityNumber;
 	@FXML Label validInput;
-	@FXML Label lfullName;
+	@FXML Label lfirstName;
+	@FXML Label llastName;
 	@FXML Label lfullAddress;
 	@FXML Label lemail;
 	@FXML Label lcountry;
 	@FXML Label lphoneNumber;
-	
+	@FXML Label lidentityNumber;
+	DataContext layerFactory;
+	private final String datePattern = "dd/MM/yyyy";
+	private SimpleDateFormat formatter;
 	
 	
 	@Override
@@ -46,11 +62,13 @@ public class AddContact  implements Initializable{
 		String name ="l" + st.substring(start,stop);
 		System.out.print(name);
 		switch(name){
-		case "lfullName": 
+		case "llastName":
+		case "lfirstName":
 		case "lcountry": checkString(name); break;
 		case "lfullAddress" :checkAddress();break;
 		case "lemail" :   checkMail(); break;
-		case "lphoneNumber" : checkPhoneNumber(); break;
+		case "lidentityNumber":
+		case "lphoneNumber" : checkPhoneNumber(name); break;
 		}
 	}
 	private void checkAddress(){
@@ -65,22 +83,33 @@ public class AddContact  implements Initializable{
 		}
 		lfullAddress.setTextFill(Paint.valueOf("RED"));
 	}
-	private void checkPhoneNumber(){
-		if(phoneNumber.getText().isEmpty()){
-			lphoneNumber.setTextFill(Paint.valueOf("BLACK"));
+	private void checkPhoneNumber(String event){
+		TextField text = null;
+		Label label = null;
+		
+		switch(event){
+		case "lidentityNumber": text = identityNumber; label = lidentityNumber; break;
+		case "lphoneNumber": text = phoneNumber; label = lphoneNumber; break;
+		}
+		
+		if(text.getText().isEmpty()){
+			label.setTextFill(Paint.valueOf("BLACK"));
 			return;
 		}
-		else if(!( phoneNumber.getText().length()>2)){
-			lphoneNumber.setTextFill(Paint.valueOf("RED"));
+		else if(!( text.getText().length()>2)){
+			label.setTextFill(Paint.valueOf("RED"));
 			return;
 		}
-		lphoneNumber.setTextFill(Paint.valueOf("GREEN"));
+		label.setTextFill(Paint.valueOf("GREEN"));
 	}
+	
+	
 	private void checkString(String event){
 		TextField text = null;
 		Label label = null;
 		switch(event){
-		case "lfullName": text = fullName; label = lfullName; break;
+		case "lfirstName": text = firstName; label = lfirstName; break;
+		case "llastName": text = lastName; label = llastName; break;
 		case "lcountry": text = country; label = lcountry; break;
 		}
 	
@@ -114,7 +143,7 @@ public class AddContact  implements Initializable{
 	@FXML
 	public void save() {
 		if(isValid()){
-			//add contact to db
+			writeUserToDb();
 			System.out.println("add to db");
 			validInput.setText("");
 		}
@@ -124,13 +153,65 @@ public class AddContact  implements Initializable{
 	}
 	
 	private boolean isValid(){
-		Label[] labels = {lfullName,lfullAddress,lemail,lcountry,lphoneNumber};
+		Label[] labels = {lfirstName,llastName,lfullAddress,lemail,lcountry,lphoneNumber};
 		int size = labels.length;
 		for(int i=0;i<size;i++){
 			if(labels[i].getText().isEmpty() || !(labels[i].getTextFill().equals(Paint.valueOf("GREEN"))))
 				return false;
 		}
 		return true;
+	}
+	
+	private void writeUserToDb(){
+		try {
+			layerFactory = SpcaDataLayerFactory.getDataContext();
+			int size = layerFactory.getContactTypes().getColumnNames().length;
+			int size2 = layerFactory.getContactTypes().getRows().length;
+			int size3 = layerFactory.getContactTypeGroups().getColumnNames().length;
+			int size4 = layerFactory.getContactTypeGroups().getRows().length;
+			Integer[] aray = {1,2,3}; 
+			int size5 = layerFactory.getContacts(null,null, null, null, null).getColumnNames().length;
+			int size6 = layerFactory.getContacts(null,null, null, null, null).getRows().length;
+			
+			formatter = new SimpleDateFormat(datePattern);
+			java.util.Date javaDate = formatter.parse(bDate.getText());
+			Timestamp startDate = new Timestamp(javaDate.getTime());
+			
+			/*layerFactory.addOrUpdateContact(firstName.getText(), lastName.getText(), phoneNumber.getText()
+					, null, email.getText(), null , fullAddress.getText(),
+					1023, null, identityNumber.getText(), startDate);
+		*/
+			
+	/*		for(int i=0;i<layerFactory.getCities().getRows().length;i++){
+				for(int j=0;j<layerFactory.getCities().getColumnNames().length;j++)
+					System.out.println(layerFactory.getCities().getRows()[i].getString(j));
+			}*/
+				//System.out.println(layerFactory.getCities().getColumnNames().);
+	/*		
+			for(int i=0;i<size2;i++){
+				for(int j=0;j<size;j++)
+					System.out.println(layerFactory.getContactTypes().getRows()[i].getString(j));
+			}
+			
+			for(int i=0;i<size4;i++){
+				for(int j=0;j<size3;j++)
+					System.out.println(layerFactory.getContactTypeGroups().getRows()[i].getString(j));
+			}
+			
+			for(int i=0;i<size6;i++){
+				for(int j=0;j<size5;j++)
+					System.out.println(layerFactory.getContacts(null,null, null, null, null).getRows()[i].getString(j));
+			}*/
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 
