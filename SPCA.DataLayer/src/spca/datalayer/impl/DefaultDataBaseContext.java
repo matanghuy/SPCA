@@ -176,8 +176,8 @@ public class DefaultDataBaseContext implements DataContext {
 	}
 
 	@Override
-	public DataResult addBalanceTarget(java.sql.Date startDate,
-			java.sql.Date endDate, double amount, String name)
+	public DataResult addBalanceTarget(java.sql.Timestamp startDate,
+			java.sql.Timestamp endDate, double amount, String name)
 			throws SQLException {
 		return executeUpdate(ProceduresNameConst.SPCA_AddBalanceTarget,
 				startDate, endDate, amount, name);
@@ -203,8 +203,8 @@ public class DefaultDataBaseContext implements DataContext {
 
 	@Override
 	public DataResult addEvent(Integer eventType, Integer animalId,
-			java.sql.Date dueDate, java.sql.Date date, String details,
-			Integer contactInvolved) throws SQLException {
+			java.sql.Timestamp dueDate, java.sql.Timestamp date,
+			String details, Integer contactInvolved) throws SQLException {
 		return executeUpdate(ProceduresNameConst.SPCA_AddEvent, eventType,
 				animalId, dueDate, date, details, contactInvolved);
 	}
@@ -213,7 +213,8 @@ public class DefaultDataBaseContext implements DataContext {
 	public DataResult addOrUpdateContact(String firstName, String lastName,
 			String phone_1, String phone_2, String email_1, String email_2,
 			String address, Integer city, String otherDetails,
-			String identityCard, java.sql.Date birthDate) throws SQLException {
+			String identityCard, java.sql.Timestamp birthDate)
+			throws SQLException {
 		return executeUpdate(ProceduresNameConst.SPCA_AddOrUpdateContact,
 				firstName, lastName, phone_1, phone_2, email_1, email_2,
 				address, city, otherDetails, identityCard, birthDate);
@@ -279,6 +280,11 @@ public class DefaultDataBaseContext implements DataContext {
 			throws SQLException {
 		return executeUpdate(
 				ProceduresNameConst.Consts_DeleteAnimalEventTypeGroup, id);
+	}
+
+	@Override
+	public DataResult deleteAnimalSource(Integer id) throws SQLException {
+		return executeUpdate(ProceduresNameConst.Consts_DeleteAnimalSource, id);
 	}
 
 	@Override
@@ -364,13 +370,19 @@ public class DefaultDataBaseContext implements DataContext {
 	}
 
 	@Override
+	public DataResult getAnimalSources() throws SQLException {
+		return executeQuery(ProceduresNameConst.Consts_GetAnimalSources);
+	}
+
+	@Override
 	public DataResult getAnimalTypes() throws SQLException {
 		return executeQuery(ProceduresNameConst.Consts_GetAnimalTypes);
 	}
 
 	@Override
-	public DataResult getBalanceTarget(String ids, java.sql.Date startDate,
-			java.sql.Date endDate) throws SQLException {
+	public DataResult getBalanceTarget(String ids,
+			java.sql.Timestamp startDate, java.sql.Timestamp endDate)
+			throws SQLException {
 		return executeQuery(ProceduresNameConst.SPCA_GetBalanceTarget, ids,
 				startDate, endDate);
 	}
@@ -381,10 +393,11 @@ public class DefaultDataBaseContext implements DataContext {
 	}
 
 	@Override
-	public DataResult getContacts(Integer[] contactTypes,
+	public DataResult getContacts(Integer[] contactIds, Integer[] contactTypes,
 			Integer[] contactTypeGroups, String contactName, Integer minAge)
 			throws SQLException {
 		return executeQuery(ProceduresNameConst.SPCA_GetContacts,
+				buildMultiParamString(contactIds),
 				buildMultiParamString(contactTypes),
 				buildMultiParamString(contactTypeGroups), contactName, minAge);
 	}
@@ -409,14 +422,15 @@ public class DefaultDataBaseContext implements DataContext {
 	@Override
 	public DataResult getEvents(Integer[] eventTypes,
 			Integer[] eventTypeGroups, Integer[] animalIds,
-			java.sql.Date[] eventDates, Boolean openedEvents,
-			java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
+			java.sql.Timestamp[] eventDates, Boolean openedEvents,
+			java.sql.Timestamp startDate, java.sql.Timestamp endDate,
+			Integer[] contactsInvolved) throws SQLException {
 		return executeQuery(ProceduresNameConst.SPCA_GetEvents,
 				buildMultiParamString(eventTypes),
 				buildMultiParamString(eventTypeGroups),
 				buildMultiParamString(animalIds),
 				buildMultiParamString(eventDates), openedEvents, startDate,
-				endDate);
+				endDate, buildMultiParamString(contactsInvolved));
 	}
 
 	@Override
@@ -442,7 +456,7 @@ public class DefaultDataBaseContext implements DataContext {
 
 	@Override
 	public DataResult getPaymentsReports(Integer[] animalIds,
-			java.sql.Date[] paymentDates, Integer[] contactsIds,
+			java.sql.Timestamp[] paymentDates, Integer[] contactsIds,
 			Integer[] paymentTypes, Integer[] transactionTypes)
 			throws SQLException {
 		return executeQuery(ProceduresNameConst.SPCA_GetPaymentsReports,
@@ -474,9 +488,9 @@ public class DefaultDataBaseContext implements DataContext {
 	public DataResult getTransactions(Integer[] transactionIds,
 			Integer[] transactionType, Integer[] eventTypes,
 			Integer[] eventTypeGroups, Integer[] animalIds,
-			java.sql.Date[] transactionDates, java.sql.Date startDate,
-			java.sql.Date endDate, Boolean unpaiedTransaction)
-			throws SQLException {
+			java.sql.Timestamp[] transactionDates,
+			java.sql.Timestamp startDate, java.sql.Timestamp endDate,
+			Boolean unpaiedTransaction) throws SQLException {
 		return executeQuery(ProceduresNameConst.SPCA_GetTransactions,
 				buildMultiParamString(transactionIds),
 				buildMultiParamString(transactionType),
@@ -515,6 +529,13 @@ public class DefaultDataBaseContext implements DataContext {
 	}
 
 	@Override
+	public DataResult updateAnimalSource(Integer id, String name)
+			throws SQLException {
+		return executeUpdate(ProceduresNameConst.Consts_UpdateAnimalSource, id,
+				name);
+	}
+
+	@Override
 	public DataResult updateAnimalType(Integer id, String name)
 			throws SQLException {
 		return executeUpdate(ProceduresNameConst.Consts_UpdateAnimalType, id,
@@ -522,9 +543,9 @@ public class DefaultDataBaseContext implements DataContext {
 	}
 
 	@Override
-	public DataResult updateBalanceTarget(Integer id, java.sql.Date startDate,
-			java.sql.Date endDate, double amount, String name)
-			throws SQLException {
+	public DataResult updateBalanceTarget(Integer id,
+			java.sql.Timestamp startDate, java.sql.Timestamp endDate,
+			double amount, String name) throws SQLException {
 		return executeUpdate(ProceduresNameConst.SPCA_UpdateBalanceTarget, id,
 				startDate, endDate, amount, name);
 	}
@@ -550,8 +571,9 @@ public class DefaultDataBaseContext implements DataContext {
 
 	@Override
 	public DataResult updateEvent(Integer id, Integer eventType,
-			Integer animalId, java.sql.Date dueDate, java.sql.Date date,
-			String details, Integer contactInvolved) throws SQLException {
+			Integer animalId, java.sql.Timestamp dueDate,
+			java.sql.Timestamp date, String details, Integer contactInvolved)
+			throws SQLException {
 		return executeUpdate(ProceduresNameConst.SPCA_UpdateEvent, id,
 				eventType, animalId, dueDate, date, details, contactInvolved);
 	}

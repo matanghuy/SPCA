@@ -21,6 +21,7 @@ public final class ProceduresNameConst {
 	public final static String SPCA_AddTypeForContact = "SPCA.AddTypeForContact";
 	public final static String Consts_DeleteAnimalEventType = "Consts.DeleteAnimalEventType";
 	public final static String Consts_DeleteAnimalEventTypeGroup = "Consts.DeleteAnimalEventTypeGroup";
+	public final static String Consts_DeleteAnimalSource = "Consts.DeleteAnimalSource";
 	public final static String Consts_DeleteAnimalType = "Consts.DeleteAnimalType";
 	public final static String SPCA_DeleteBalanceTarget = "SPCA.DeleteBalanceTarget";
 	public final static String Consts_DeleteCities = "Consts.DeleteCities";
@@ -35,6 +36,7 @@ public final class ProceduresNameConst {
 	public final static String Consts_GetAnimalEventTypeByGroup = "Consts.GetAnimalEventTypeByGroup";
 	public final static String Consts_GetAnimalEventTypeGroups = "Consts.GetAnimalEventTypeGroups";
 	public final static String SPCA_GetAnimals = "SPCA.GetAnimals";
+	public final static String Consts_GetAnimalSources = "Consts.GetAnimalSources";
 	public final static String Consts_GetAnimalTypes = "Consts.GetAnimalTypes";
 	public final static String SPCA_GetBalanceTarget = "SPCA.GetBalanceTarget";
 	public final static String Consts_GetCities = "Consts.GetCities";
@@ -55,6 +57,7 @@ public final class ProceduresNameConst {
 	public final static String SPCA_UpdateAnimal = "SPCA.UpdateAnimal";
 	public final static String Consts_UpdateAnimalEventType = "Consts.UpdateAnimalEventType";
 	public final static String Consts_UpdateAnimalEventTypeGroup = "Consts.UpdateAnimalEventTypeGroup";
+	public final static String Consts_UpdateAnimalSource = "Consts.UpdateAnimalSource";
 	public final static String Consts_UpdateAnimalType = "Consts.UpdateAnimalType";
 	public final static String SPCA_UpdateBalanceTarget = "SPCA.UpdateBalanceTarget";
 	public final static String Consts_UpdateCities = "Consts.UpdateCities";
