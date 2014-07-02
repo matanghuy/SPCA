@@ -48,13 +48,13 @@ public interface DataContext {
 	public DataResult getContactTypesByGroup(Integer contactTypeGroup) throws SQLException;
 	public DataResult getEvents(Integer[] eventTypes, Integer[] eventTypeGroups, Integer[] animalIds, java.sql.Timestamp[] eventDates, Boolean openedEvents, java.sql.Timestamp startDate, java.sql.Timestamp endDate, Integer[] contactsInvolved) throws SQLException;
 	public DataResult getItemsForTransaction(Integer transactionID) throws SQLException;
-	public DataResult getMembersThatHasntPayed(Integer year) throws SQLException;
+	public DataResult getMembersThatHasntPayed(Integer year, Boolean notPayedOnly) throws SQLException;
 	public DataResult getPaymentsForTransaction(Integer transactionID) throws SQLException;
 	public DataResult getPaymentsReports(Integer[] animalIds, java.sql.Timestamp[] paymentDates, Integer[] contactsIds, Integer[] paymentTypes, Integer[] transactionTypes) throws SQLException;
 	public DataResult getPaymentTypes() throws SQLException;
 	public DataResult getProcedureParams(String procedureName) throws SQLException;
 	public DataResult getSetting(Integer id) throws SQLException;
-	public DataResult getTransactions(Integer[] transactionIds, Integer[] transactionType, Integer[] eventTypes, Integer[] eventTypeGroups, Integer[] animalIds, java.sql.Timestamp[] transactionDates, java.sql.Timestamp startDate, java.sql.Timestamp endDate, Boolean unpaiedTransaction) throws SQLException;
+	public DataResult getTransactions(Integer[] transactionIds, Integer[] transactionType, Integer[] eventTypes, Integer[] eventTypeGroups, Integer[] animalIds, Integer[] eventIds, java.sql.Timestamp[] transactionDates, java.sql.Timestamp startDate, java.sql.Timestamp endDate, Boolean unpaiedTransaction) throws SQLException;
 	public DataResult getTransactionType() throws SQLException;
 	public DataResult updateAnimal(Integer id, String name, String chipNum, Integer animalType, Integer sourceCity, Integer animalSource, Boolean specialNeeds) throws SQLException;
 	public DataResult updateAnimalEventType(Integer id, String name) throws SQLException;

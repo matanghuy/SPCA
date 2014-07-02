@@ -441,10 +441,10 @@ public class DefaultDataBaseContext implements DataContext {
 	}
 
 	@Override
-	public DataResult getMembersThatHasntPayed(Integer year)
-			throws SQLException {
+	public DataResult getMembersThatHasntPayed(Integer year,
+			Boolean notPayedOnly) throws SQLException {
 		return executeQuery(ProceduresNameConst.SPCA_GetMembersThatHasntPayed,
-				year);
+				year, notPayedOnly);
 	}
 
 	@Override
@@ -487,7 +487,7 @@ public class DefaultDataBaseContext implements DataContext {
 	@Override
 	public DataResult getTransactions(Integer[] transactionIds,
 			Integer[] transactionType, Integer[] eventTypes,
-			Integer[] eventTypeGroups, Integer[] animalIds,
+			Integer[] eventTypeGroups, Integer[] animalIds, Integer[] eventIds,
 			java.sql.Timestamp[] transactionDates,
 			java.sql.Timestamp startDate, java.sql.Timestamp endDate,
 			Boolean unpaiedTransaction) throws SQLException {
@@ -497,6 +497,7 @@ public class DefaultDataBaseContext implements DataContext {
 				buildMultiParamString(eventTypes),
 				buildMultiParamString(eventTypeGroups),
 				buildMultiParamString(animalIds),
+				buildMultiParamString(eventIds),
 				buildMultiParamString(transactionDates), startDate, endDate,
 				unpaiedTransaction);
 	}

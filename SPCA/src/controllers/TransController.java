@@ -1,5 +1,10 @@
 package controllers;
+import beans.Contact;
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 import spca.datalayer.DataContext;
+import spca.datalayer.DataResult;
+import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
 
 import java.io.IOException;
@@ -65,7 +70,7 @@ public class TransController implements Initializable{
 	@FXML private TableView<PurchaseItem> tableView;
 	@FXML private TableColumn<PurchaseItem, String> colItemName;
 	@FXML private TableColumn<PurchaseItem, Double> colItemCost;
-	
+
 	private int contactId = -1;
 	DataContext layerFactory;
 
@@ -73,24 +78,7 @@ public class TransController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			layerFactory = SpcaDataLayerFactory.getDataContext();
-		/*	for(int i=0;i<layerFactory.getTransactionType().getRows().length;i++){
-				System.out.println(layerFactory.getTransactionType().getRows()[i].getString(1));
-			}
-			System.out.println("this is the data: "+ layerFactory.getTransactionType().getRows()[0].getString(1));
-			System.out.println("this is the data: "+ layerFactory.getTransactionType().getRows().length);
-			for(int i=0;i<layerFactory.getTransactionType().getColumnNames().length;i++){
-				System.out.println(layerFactory.getTransactionType().getColumnNames()[i]);
-			}*/
-			System.out.println(layerFactory.getTransactionType().getColumnNames().length);
-			for(int i=0;i<layerFactory.getTransactionType().getColumnNames().length;i++){
-				System.out.println(layerFactory.getTransactionType().getColumnNames()[i]);
-			}
-		//	System.out.println(layerFactory.getTransactions(null, null, null, null, null, null, new Date(06.10), 20/10/2014));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -121,15 +109,15 @@ public class TransController implements Initializable{
 
 
 	private void fillExpansesTypes() {
-		//TODO:here we need to get types from database
 		ArrayList<String> typeName = new ArrayList<String>();
 		try {
-			int size = layerFactory.getTransactionType().getRows().length;
-			for(int i=0;i<size;i++){
-				typeName.add(layerFactory.getTransactionType().getRows()[i].getString(1));
+            DataResult result = layerFactory.getTransactionType();
+            DataRow[] rows = result.getRows();
+
+			for(int i=0;i<rows.length;i++){
+				typeName.add(rows[i].getString(1));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ObservableList<String> types = FXCollections.observableArrayList(typeName);
@@ -166,15 +154,17 @@ public class TransController implements Initializable{
 			Stage dialog = new Stage();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
 			Parent root = (Parent)loader.load();
-		//	DialogController controller = loader.getController();
-		//	controller.setStageRef(dialog);
-		//	controller.setRestaurant(restaurant);
 			Scene scene = new Scene(root,600,400);
-		//	scene.getStylesheets().add(getClass().getResource("/css/dialog.css").toExternalForm());
 			dialog.setScene(scene);
 			dialog.setTitle(title);
 			dialog.initModality(Modality.WINDOW_MODAL);
-		//	dialog.initOwner(mainStage);
+            dialog.setOnHidden(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    setDisplayedContact(CommonUtils.contact);
+                    CommonUtils.contact = null;
+                }
+            });
 			dialog.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -256,11 +246,7 @@ public class TransController implements Initializable{
 			}
 		}
 		
-//			types[counter] = transactionsType.cash.ordinal();
-//			System.out.println(lblTotalPaid.getText());
-//			System.out.println(tfCash.getText());
-//			System.out.println(tfCheck.getText());
-//			System.out.println(tfCredit.getText());
+
 		
 	}
 	
@@ -275,6 +261,18 @@ public class TransController implements Initializable{
 		return null;
 		
 	}
+
+    public void setDisplayedContact(Contact contact) {
+        if(contact == null)
+            return;
+        fullName.setText(contact.getFullName());
+        fullAddress.setText(contact.getFullAddress());
+        phoneNumber.setText(contact.getPhoneNumbers());
+        email.setText(contact.getEmail1());
+    }
+    private void updateContact() {
+
+    }
 
 
 	private double parseText(TextField field) {

@@ -14,8 +14,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -38,8 +40,7 @@ public class FindContact implements Initializable {
 	private Map<String, Integer> contactTypes;
 	private Map<String, Integer> contactGroups;
 	private ObservableList<Contact> contacts;
-	@FXML
-	private TableView<Contact> tableContacts;
+	@FXML private TableView<Contact> tableContacts;
 	@FXML private TableColumn<Contact, String> firstName;
 	@FXML private TableColumn<Contact, String> lastName;
 	@FXML private TableColumn<Contact, String> address;
@@ -101,14 +102,14 @@ public class FindContact implements Initializable {
 		
 			for (int i = 0; i < typesLength; i++) {
 				String name = (String) types[i].getObject("Name");
-				int id = (int)types[i].getObject("ID");
+				int id = (Integer)types[i].getObject("ID");
 				contactTypes.put(name, id);
 				
 			}
 
 			for (int i = 0; i < groupsLength; i++) {
 				String name = (String) groups[i].getObject("Name");
-				int id = (int)types[i].getObject("ID");
+				int id = (Integer)types[i].getObject("ID");
 				contactGroups.put(name, id);
 			}
 
@@ -204,9 +205,11 @@ public class FindContact implements Initializable {
 		return contact;
 	}
 	@FXML
-	private void accept() {
+	private void accept(ActionEvent event) {
 		Contact selected = tableContacts.getSelectionModel().getSelectedItem();
-		System.out.println(c);
+        CommonUtils.contact = selected;
+        ((Node)event.getSource()).getScene().getWindow().hide();
+
 	}
 
 	private void changeCheckBoxView(Collection<String> elements) {
