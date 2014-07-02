@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 
 <VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewDestination">
 	<children>
@@ -22,7 +23,7 @@
 		</HBox>
 		<HBox spacing = "10">
 			<Label text = "הכנס קטגוריה"/>
-			<TextField fx:id = "category" maxWidth="180"></TextField>
+			<ChoiceBox  fx:id = "category" maxWidth="180"></ChoiceBox>
 			<!--  <Label text = "ש״ח"/>-->
 		</HBox>
 		<HBox spacing = "10">

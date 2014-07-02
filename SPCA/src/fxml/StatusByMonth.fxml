@@ -14,15 +14,13 @@
 	<HBox spacing="12">
 	
 		<Text> בחר חודש: </Text>
-		<ComboBox fx:id="date">
+		<ComboBox fx:id="month">
 		</ComboBox>
 		<Text> בחר שנה: </Text>
 		<ComboBox fx:id="year" >
 		</ComboBox>
-		<Text> בחר קטגוריה: </Text>
-		<ComboBox fx:id = "category"></ComboBox>
 		
-		<Button fx:id="start"> חפש </Button>
+		<Button fx:id="start"  onAction="#search"> חפש </Button>
 	</HBox>
 	<TableView fx:id="tableView" editable="true">
 	<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>

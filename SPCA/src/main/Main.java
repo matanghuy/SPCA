@@ -15,7 +15,7 @@ public class Main extends Application{
 	public void start(final Stage primaryStage) {
 		try {
 			System.out.println(getClass().getResource("."));
-			Parent root = (Parent)FXMLLoader.load(getClass().getResource("../fxml/newTransaction.fxml"));
+			Parent root = (Parent)FXMLLoader.load(getClass().getResource("../fxml/StatusByMonth.fxml"));
 			Scene scene = new Scene(root,650,400);
 			primaryStage.setScene(scene);
 			primaryStage.show();

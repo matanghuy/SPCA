@@ -41,7 +41,6 @@ public class expensesReport  implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		fillExpansesTypes();
 		fillTimeBoxes();
 		fillCategorys();
 		
@@ -98,9 +97,7 @@ public class expensesReport  implements Initializable {
 		
 	}
 	
-	public void fillExpansesTypes(){
-		
-	}
+
 	
 	@FXML 
 	public void handleSearch(){

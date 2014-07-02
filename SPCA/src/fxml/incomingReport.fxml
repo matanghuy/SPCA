@@ -40,14 +40,14 @@
          </children>
       </HBox>
       <TableView fx:id = "table" nodeOrientation="RIGHT_TO_LEFT">
-      
+        <columns>
            <TableColumn fx:id="name" text="שם" />
            <TableColumn fx:id="date" text="תאריך" />
            <TableColumn fx:id="totalToPay" text="סכום לתשלום" />
             <TableColumn fx:id="totalPaid" text="סכום שולם" />
     		 <TableColumn fx:id="transactionType" text="סוג הכנסה" />
     		 <TableColumn fx:id="comments" text="הערות" />
-    		
+    		</columns>
       
       
       </TableView>

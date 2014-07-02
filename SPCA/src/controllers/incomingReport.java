@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import beans.Contact;
+import beans.Transaction;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -20,6 +23,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class incomingReport  implements Initializable{
 	
@@ -32,6 +38,16 @@ public class incomingReport  implements Initializable{
 	@FXML ComboBox yearEnd;
 	@FXML ComboBox monthEnd;
 	@FXML ComboBox dayEnd;
+	@FXML private TableView<Transaction> table;
+	@FXML TableColumn name;
+	@FXML TableColumn date;
+	@FXML TableColumn totalToPay;
+	@FXML TableColumn totalPaid;
+	@FXML TableColumn transactionType;
+	@FXML TableColumn comments;
+	private ObservableList<Transaction> transaction;
+	private HashMap<String,Integer> transactionTypeMap = new HashMap<String,Integer>(); 
+	
 	private final String datePattern = "dd/MM/yyyy";
 	private SimpleDateFormat formatter;
 	Timestamp startTime;
@@ -42,7 +58,9 @@ public class incomingReport  implements Initializable{
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+		transaction = FXCollections.observableArrayList();
+		table.setItems(transaction);
+		initTable();
 		fillExpansesTypes();
 		fillTimeBoxes();
 	}
@@ -96,6 +114,7 @@ public class incomingReport  implements Initializable{
 			int size = data.length;
 			for(int i=0;i<size;i++){
 				typeName.add(data[i].getString(1));
+				transactionTypeMap.put(data[i].getString(1), i+1);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -108,6 +127,7 @@ public class incomingReport  implements Initializable{
 	}
 	@FXML
 	public void handleSearch(ActionEvent event){
+		transaction.clear();
 		formatter = new SimpleDateFormat(datePattern);
 		String syear = yearStart.getValue().toString();
 		String smonth = monthStart.getValue().toString();
@@ -133,18 +153,22 @@ public class incomingReport  implements Initializable{
 			endTime = new Timestamp(javaDate.getTime());
 			System.out.println(startTime);
 			System.out.println(endTime);
+			Integer typeSelect[] = new Integer[1];
 			if(show.equals("הכול"))
-				show = null;
-			DataResult result = layerFactory.getTransactions(null, null, null, null,null, null, null, startTime,endTime,null);
+				typeSelect = null;
+			else
+				typeSelect[0] = transactionTypeMap.get(show);
+			DataResult result = layerFactory.getTransactions(null, typeSelect, null, null,null, null, null, startTime,endTime,null);
 			System.out.println(result.getRows().length);
 		/*	for(int i=0;i<result.getColumnNames().length;i++){
 				System.out.println(result.getColumnNames()[i]);
 			}*/
-			for(int i=0;i<result.getRows().length;i++){
 			
+			for(int i=0;i<result.getRows().length;i++){
+			this.transaction.add(creatTransaction(result.getRows()[i]));
 					
 				System.out.println(result.getRows()[i].getObject("ContactName"));
-				System.out.println(result.getRows()[i].getObject("TransactionDate"));
+				System.out.println(result.getRows()[i].getObject("TransactionDate")+"");
 				System.out.println(result.getRows()[i].getObject("TotalAmountPayed"));
 				System.out.println(result.getRows()[i].getObject("TotalAmountToPay"));
 				System.out.println(result.getRows()[i].getObject("TransactionTypeName"));
@@ -162,6 +186,25 @@ public class incomingReport  implements Initializable{
 		
 		
 		
+	}
+	private Transaction creatTransaction(DataRow row){
+		Transaction transaction = new Transaction();
+		transaction.setContactName((String)row.getObject("ContactName"));
+		transaction.setTransactionDate((String)(row.getObject("TransactionDate")+""));
+		transaction.setTotalAmountPayed((String)(row.getObject("TotalAmountPayed")+""));
+		transaction.setTotalAmountToPay((String)(row.getObject("TotalAmountToPay")+""));
+		transaction.setTransactionTypeName((String)row.getObject("TransactionTypeName"));
+		transaction.setComments((String)row.getObject("Comments"));
+		return transaction;
+	}
+	
+	public void initTable() {
+		name.setCellValueFactory(new PropertyValueFactory<Transaction, String>("ContactName"));
+		date.setCellValueFactory(new PropertyValueFactory<Transaction, String>("TransactionDate"));
+		totalToPay.setCellValueFactory(new PropertyValueFactory<Transaction, String>("TotalAmountToPay"));
+		totalPaid.setCellValueFactory(new PropertyValueFactory<Transaction, String>("TotalAmountPayed"));
+		transactionType.setCellValueFactory(new PropertyValueFactory<Transaction, String>("TransactionTypeName"));
+		comments.setCellValueFactory(new PropertyValueFactory<Transaction, String>("Comments"));		
 	}
 
 }

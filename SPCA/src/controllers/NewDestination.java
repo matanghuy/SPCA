@@ -12,13 +12,16 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import spca.datalayer.DataContext;
+import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -35,7 +38,7 @@ public class NewDestination implements Initializable{
 	@FXML ComboBox<String> month;
 	@FXML TextField year;
 	@FXML TextField destination;
-	@FXML TextField category;
+	@FXML ChoiceBox<String> category;
 	@FXML Label wrongInput;
 	DataContext layerFactory;
 	
@@ -43,7 +46,33 @@ public class NewDestination implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		intializeMonth();
+		fillExpensesTypes();
 		
+	}
+	private void fillExpensesTypes(){
+		ArrayList<String> type = fillTypersFromDb();
+		ObservableList<String> types = FXCollections.observableArrayList(type);
+		category.setItems(types);
+		category.setValue(category.getItems().get(0));
+	}
+	private ArrayList<String> fillTypersFromDb(){
+		ArrayList<String> typeName = null;
+		typeName = new ArrayList<String>();
+		try {
+			layerFactory = SpcaDataLayerFactory.getDataContext();
+			DataRow[] data = layerFactory.getTransactionType().getRows();
+			int size = data.length;
+			for(int i=0;i<size;i++){
+				typeName.add(data[i].getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return typeName;
 	}
 	private void intializeMonth(){
 		ArrayList<String> monthArray = new ArrayList<String>();
@@ -89,6 +118,7 @@ public class NewDestination implements Initializable{
 			System.out.println("send the data to the db year: "+year.getText()
 					+" month "+month.getValue()+" destination "+destination.getText());
 			wrongInput.setText("");
+			((Node)event.getSource()).getScene().getWindow().hide();
 		}
 		else{
 			wrongInput.setText("הזנת נתונים לא חוקית!\n הנה נסה שנית");
@@ -99,14 +129,7 @@ public class NewDestination implements Initializable{
 	private void wirteToDb() {
 			try {
 		layerFactory = SpcaDataLayerFactory.getDataContext();
-		layerFactory.addBalanceTarget(startDate, endDate, destinationInt, category.getText());
-		int size = layerFactory.getBalanceTarget(null, null, null).getColumnNames().length;
-		int size2 = layerFactory.getBalanceTarget(null, null, null).getRows().length;
-		
-		for(int i=0;i<size2;i++){
-			for(int j=0;j<size;j++)
-				System.out.println(layerFactory.getBalanceTarget(null, null, null).getRows()[i].getString(j));
-		}
+		layerFactory.addBalanceTarget(startDate, endDate, destinationInt, category.getValue());
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
