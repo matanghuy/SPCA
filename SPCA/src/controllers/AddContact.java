@@ -246,7 +246,7 @@ private ArrayList<String> fillTypersFromDb(){
 			formatter = new SimpleDateFormat(datePattern);
 			java.util.Date javaDate = formatter.parse(bDate);
 			Timestamp startDate = new Timestamp(javaDate.getTime());
-			Integer cityNuber = SharedMethodes.city.get(country.getText());
+			Integer cityNuber = CommonUtils.city.get(country.getText());
 			System.out.println(cityNuber);
 			
 			DataResult data = layerFactory.addOrUpdateContact(firstName.getText(), lastName.getText(), phoneNumber.getText()
