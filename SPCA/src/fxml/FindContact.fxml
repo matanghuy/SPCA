@@ -20,7 +20,7 @@
          <TextField fx:id = "findName" visible="false" nodeOrientation="RIGHT_TO_LEFT" GridPane.columnIndex="3"	GridPane.rowIndex="0"></TextField>
           <ChoiceBox fx:id="changeView" visible="false" GridPane.columnIndex="3"	GridPane.rowIndex="0">
           </ChoiceBox>
-          <ChoiceBox fx:id="findAccording" onMouseClicked="#checkView" GridPane.columnIndex="2"	GridPane.rowIndex="0">
+          <ChoiceBox fx:id="findAccording" GridPane.columnIndex="2"	GridPane.rowIndex="0">
               
            </ChoiceBox>
             <Label text="חפש לפי :" GridPane.columnIndex="1"	GridPane.rowIndex="0">

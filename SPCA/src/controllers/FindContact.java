@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.sun.tracing.dtrace.ArgsAttributes;
+
 import spca.datalayer.DataContext;
 import spca.datalayer.SpcaDataLayerFactory;
 import javafx.beans.value.ChangeListener;
@@ -84,11 +86,14 @@ public class FindContact implements Initializable{
 			@Override
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
-				  System.out.println(findAccording.getItems().get((Integer) arg2));
+				String newName = (String)(findAccording.getItems().get(((int)arg2)) );
+				//  System.out.println(findAccording.getItems().get((Integer) arg2));
+				System.out.println(newName);
 				
-				  checkView();
+				  checkView(newName);
 			}
 		    });
+		checkView(findAccording.getValue().toString());
 		
 		
 		
@@ -99,15 +104,14 @@ public class FindContact implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	@FXML 
-	public void checkView(){
+	public void checkView(String newName){
 		System.out.println("inside it");
-		if(findAccording.getValue().equals(nameHebraw)){
+		if(newName.equals(nameHebraw)){
 			System.out.println("inside name");
 			findName.setVisible(true);
 			changeView.setVisible(false);
 		}
-		else if(findAccording.getValue().equals(typeHebraw)){
+		else if(newName.equals(typeHebraw)){
 			findName.setVisible(false);
 			changeView.setVisible(true);
 			changeCheckBoxView(type);
