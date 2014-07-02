@@ -11,13 +11,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableView?>
 
-<VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="20" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controllers.expensesReport">
+<VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controllers.expensesReport">
 	<padding>
 		<Insets bottom="20" left="20" right="20" top="20" />
 	</padding>
    <children>
    	<Label alignment="BASELINE_CENTER" text="דו״ח  הכנסות" />
-   	<HBox id="datePane" spacing="15">
+   	<HBox id="datePane" spacing="10">
       <children>
       		<Label id="date" alignment="BASELINE_CENTER" text="מתאריך" />
       		<ComboBox fx:id="yearStart" />
@@ -40,7 +40,17 @@
          </children>
       </HBox>
       <TableView fx:id = "table">
-      
+       <columns>
+        
+           <TableColumn fx:id="name" text="שם" />
+           <TableColumn fx:id="address" text="כתובת" />
+           <TableColumn fx:id="phone1" text="טלפון 1" />
+            <TableColumn fx:id="phone2" text="טלפון 2" />
+    		 <TableColumn fx:id="mail1" text="אימייל 1" />
+    		 <TableColumn fx:id="mail2" text="אימייל 2" />
+    		  <TableColumn fx:id="category" text="מחלקה" />
+           <TableColumn fx:id="city" text="עיר" />
+        </columns>
       
       </TableView>
    </children>

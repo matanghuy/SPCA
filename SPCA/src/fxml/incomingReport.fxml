@@ -17,7 +17,7 @@
 	</padding>
    <children>
    	<Label alignment="BASELINE_CENTER" text="דו״ח  הכנסות" />
-   	<HBox id="datePane" spacing="15">
+   	<HBox id="datePane" spacing="10">
       <children>
       		<Label id="date" alignment="BASELINE_CENTER" text="מתאריך" />
       		<ComboBox fx:id="yearStart" />
@@ -39,7 +39,15 @@
       		</Button>
          </children>
       </HBox>
-      <TableView fx:id = "table">
+      <TableView fx:id = "table" nodeOrientation="RIGHT_TO_LEFT">
+      
+           <TableColumn fx:id="name" text="שם" />
+           <TableColumn fx:id="date" text="תאריך" />
+           <TableColumn fx:id="totalToPay" text="סכום לתשלום" />
+            <TableColumn fx:id="totalPaid" text="סכום שולם" />
+    		 <TableColumn fx:id="transactionType" text="סוג הכנסה" />
+    		 <TableColumn fx:id="comments" text="הערות" />
+    		
       
       
       </TableView>

@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import spca.datalayer.DataContext;
+import spca.datalayer.DataResult;
+import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,18 +32,17 @@ public class incomingReport  implements Initializable{
 	@FXML ComboBox yearEnd;
 	@FXML ComboBox monthEnd;
 	@FXML ComboBox dayEnd;
+	private final String datePattern = "dd/MM/yyyy";
+	private SimpleDateFormat formatter;
+	Timestamp startTime;
+	Timestamp endTime;
 	
 	DataContext layerFactory;
 	
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		try {
-			layerFactory = SpcaDataLayerFactory.getDataContext();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		fillExpansesTypes();
 		fillTimeBoxes();
 	}
@@ -88,11 +91,16 @@ public class incomingReport  implements Initializable{
 		typeName = new ArrayList<String>();
 		typeName.add("הכול");
 		try {
-			int size = layerFactory.getTransactionType().getRows().length;
+			layerFactory = SpcaDataLayerFactory.getDataContext();
+			DataRow[] data = layerFactory.getTransactionType().getRows();
+			int size = data.length;
 			for(int i=0;i<size;i++){
-				typeName.add(layerFactory.getTransactionType().getRows()[i].getString(1));
+				typeName.add(data[i].getString(1));
 			}
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -100,25 +108,60 @@ public class incomingReport  implements Initializable{
 	}
 	@FXML
 	public void handleSearch(ActionEvent event){
+		formatter = new SimpleDateFormat(datePattern);
 		String syear = yearStart.getValue().toString();
 		String smonth = monthStart.getValue().toString();
 		String sday = dayStart.getValue().toString();
 		System.out.println("year: "+syear+" month: "+smonth+" day: "+sday);
+		String startDateString = sday + "/" + smonth + "/" + syear;
 		
+	
 		String eyear = yearEnd.getValue().toString();
 		String emonth = monthEnd.getValue().toString();
 		String eday = dayEnd.getValue().toString();
 		System.out.println("year: "+eyear+" month: "+emonth+" day: "+eday);
+		String endDateString =  eday + "/" + emonth+ "/" + eyear ;
 		
 		String show = category.getValue().toString();
-		System.out.println("category: "+show);
 		
-	/*	try {
-			layerFactory.addTransaction(48, 22, 1, null, null, null);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		
+		try {
+			
+			java.util.Date javaDate = formatter.parse(startDateString);
+			startTime = new Timestamp(javaDate.getTime());
+			javaDate = formatter.parse(endDateString);
+			endTime = new Timestamp(javaDate.getTime());
+			System.out.println(startTime);
+			System.out.println(endTime);
+			if(show.equals("הכול"))
+				show = null;
+			DataResult result = layerFactory.getTransactions(null, null, null, null,null, null, null, startTime,endTime,null);
+			System.out.println(result.getRows().length);
+		/*	for(int i=0;i<result.getColumnNames().length;i++){
+				System.out.println(result.getColumnNames()[i]);
+			}*/
+			for(int i=0;i<result.getRows().length;i++){
+			
+					
+				System.out.println(result.getRows()[i].getObject("ContactName"));
+				System.out.println(result.getRows()[i].getObject("TransactionDate"));
+				System.out.println(result.getRows()[i].getObject("TotalAmountPayed"));
+				System.out.println(result.getRows()[i].getObject("TotalAmountToPay"));
+				System.out.println(result.getRows()[i].getObject("TransactionTypeName"));
+				System.out.println(result.getRows()[i].getObject("Comments"));
+				
+				
+				
+		
+				
+			}
+				
+		}catch(Exception e){
 			e.printStackTrace();
-		}*/
+		}
+		
+		
+		
 	}
 
 }

@@ -165,33 +165,38 @@ public class AddContact  implements Initializable{
 	private void writeUserToDb(){
 		try {
 			layerFactory = SpcaDataLayerFactory.getDataContext();
-			int size = layerFactory.getContactTypes().getColumnNames().length;
+		/*	int size = layerFactory.getContactTypes().getColumnNames().length;
 			int size2 = layerFactory.getContactTypes().getRows().length;
 			int size3 = layerFactory.getContactTypeGroups().getColumnNames().length;
 			int size4 = layerFactory.getContactTypeGroups().getRows().length;
 			Integer[] aray = {1,2,3}; 
-			int size5 = layerFactory.getContacts(null,null, null, null, null).getColumnNames().length;
+			*/int size5 = layerFactory.getContacts(null,null, null, null, null).getColumnNames().length;
 			int size6 = layerFactory.getContacts(null,null, null, null, null).getRows().length;
+			
 			
 			formatter = new SimpleDateFormat(datePattern);
 			java.util.Date javaDate = formatter.parse(bDate.getText());
 			Timestamp startDate = new Timestamp(javaDate.getTime());
 			
-			/*layerFactory.addOrUpdateContact(firstName.getText(), lastName.getText(), phoneNumber.getText()
-					, null, email.getText(), null , fullAddress.getText(),
-					1023, null, identityNumber.getText(), startDate);
-		*/
+			
+			Integer cityNuber = SharedMethodes.city.get(country.getText());
+			System.out.println(cityNuber);
+			
+		//	layerFactory.addOrUpdateContact(firstName.getText(), lastName.getText(), phoneNumber.getText()
+		//			, null, email.getText(), null , fullAddress.getText(),
+		//			cityNuber, null, identityNumber.getText(), startDate);
+		
 			
 	/*		for(int i=0;i<layerFactory.getCities().getRows().length;i++){
 				for(int j=0;j<layerFactory.getCities().getColumnNames().length;j++)
 					System.out.println(layerFactory.getCities().getRows()[i].getString(j));
-			}*/
+			}
 				//System.out.println(layerFactory.getCities().getColumnNames().);
 			
 			for(int i=0;i<size2;i++){
 					System.out.println(layerFactory.getContactTypes().getRows()[i].getObject("Name"));
 					
-			}
+			}*/
 		/*	
 			for(int i=0;i<size4;i++){
 				for(int j=0;j<size3;j++)
@@ -200,7 +205,7 @@ public class AddContact  implements Initializable{
 			*/
 			for(int i=0;i<size6;i++){
 				for(int j=0;j<size5;j++)
-					System.out.println(layerFactory.getContacts(null,null, null, "בלסיאנו", null).getRows()[i].getString(j));
+					System.out.println(layerFactory.getContacts(null,null, null, null, null).getRows()[i].getString(j));
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

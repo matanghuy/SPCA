@@ -33,7 +33,8 @@ public class MainController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		SharedMethodes.intializeCity();
+		
 	}
 
 	@FXML
@@ -63,6 +64,7 @@ public class MainController implements Initializable {
 			windowName = "errorMessage.fxml";
 		}
 		createNewWindow(windowName);
+		
 	}
 
 	private void createNewWindow(String windowName) {
@@ -75,6 +77,7 @@ public class MainController implements Initializable {
 			dialog.setScene(scene);
 			dialog.initModality(Modality.WINDOW_MODAL);
 			dialog.show();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

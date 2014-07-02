@@ -87,7 +87,6 @@ public class FindContact implements Initializable{
 			public void changed(ObservableValue<? extends Number> arg0,
 					Number arg1, Number arg2) {
 				String newName = (String)(findAccording.getItems().get(((int)arg2)) );
-				//  System.out.println(findAccording.getItems().get((Integer) arg2));
 				System.out.println(newName);
 				
 				  checkView(newName);

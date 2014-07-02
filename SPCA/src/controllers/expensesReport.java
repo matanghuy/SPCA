@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import spca.datalayer.DataContext;
+import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.util.Callback;
 
 public class expensesReport  implements Initializable {
 	
@@ -26,6 +28,7 @@ public class expensesReport  implements Initializable {
 	@FXML ComboBox yearEnd;
 	@FXML ComboBox monthEnd;
 	@FXML ComboBox dayEnd;
+	final String name = "Name";
 	
 	DataContext layerFactory;
 	
@@ -40,10 +43,28 @@ public class expensesReport  implements Initializable {
 		}
 		fillExpansesTypes();
 		fillTimeBoxes();
+		fillCategorys();
 		
 	}
 
-	
+	private void fillCategorys(){
+		ArrayList<String> categories = new ArrayList<String>();
+		try {
+			
+		DataRow[] data= layerFactory.getTransactionType().getRows();
+		int size = data.length;
+		
+		for(int i=0;i<size;i++){
+			categories.add((String)data[i].getObject(name));
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		ObservableList<String> categoryObserver = FXCollections.observableArrayList(categories);
+		category.setItems(categoryObserver);
+		category.setValue(category.getItems().get(0));
+	}
 	private void fillTimeBoxes(){
 		ArrayList<String> year = new ArrayList<String>();
 		ArrayList<String> month = new ArrayList<String>();
@@ -83,21 +104,7 @@ public class expensesReport  implements Initializable {
 	
 	@FXML 
 	public void handleSearch(){
-		try {
-			int size = layerFactory.getTransactionType().getRows().length;
-			int size2 = layerFactory.getTransactionType().getColumnNames().length;
-			System.out.println(size);
-			System.out.println(size2);
-			
-			for(int i=0;i<size;i++){
-				for(int j=0;j<size2;j++){
-					System.out.println(layerFactory.getTransactionType().getRows()[i].getString(j));
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 }

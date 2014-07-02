@@ -1,2 +1,8 @@
 [2014-07-02 00:20:56,138] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;129 - The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Contact_Cities". The conflict occurred in database "SPCA", table "Consts.Cities", column 'ID'.
 [2014-07-02 00:23:33,111] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;129 - The INSERT statement conflicted with the CHECK constraint "CK__Contact__Phone_1__02C769E9". The conflict occurred in database "SPCA", table "SPCA.Contact", column 'Phone_1'.
+[2014-07-02 13:25:56,373] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;90 - Procedure or function 'GetTransactions' expects parameter '@UnpaiedTransaction', which was not supplied.
+[2014-07-02 13:27:53,869] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;90 - Procedure or function 'GetTransactions' expects parameter '@UnpaiedTransaction', which was not supplied.
+[2014-07-02 13:29:28,205] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;90 - Procedure or function 'GetTransactions' expects parameter '@UnpaiedTransaction', which was not supplied.
+[2014-07-02 13:30:56,175] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;90 - Procedure or function 'GetTransactions' expects parameter '@UnpaiedTransaction', which was not supplied.
+[2014-07-02 13:30:59,111] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;90 - Procedure or function 'GetTransactions' expects parameter '@UnpaiedTransaction', which was not supplied.
+[2014-07-02 15:44:36,640] : ERROR - spca.datalayer.impl.DefaultDataBaseContext;90 - Procedure or function 'GetTransactions' expects parameter '@UnpaiedTransaction', which was not supplied.
