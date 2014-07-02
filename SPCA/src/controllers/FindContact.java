@@ -206,7 +206,7 @@ public class FindContact implements Initializable {
 	@FXML
 	private void accept() {
 		Contact selected = tableContacts.getSelectionModel().getSelectedItem();
-		System.out.println(selected);
+		System.out.println(c);
 	}
 
 	private void changeCheckBoxView(Collection<String> elements) {
