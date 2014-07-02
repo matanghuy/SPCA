@@ -3,15 +3,13 @@ package controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.sun.tracing.dtrace.ArgsAttributes;
-
-import spca.datalayer.DataContext;
-import spca.datalayer.SpcaDataLayerFactory;
+import beans.Contact;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -19,116 +17,200 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import spca.datalayer.DataContext;
+import spca.datalayer.DataResult;
+import spca.datalayer.DataRow;
+import spca.datalayer.SpcaDataLayerFactory;
 
-public class FindContact implements Initializable{
+public class FindContact implements Initializable {
+
+	@FXML
+	TextField findName;
+	@FXML
+	ChoiceBox<String> findAccording;
+	@FXML
+	ChoiceBox<String> changeView;
+	private DataContext database;
+	private Map<String, Integer> contactTypes;
+	private Map<String, Integer> contactGroups;
+	private ObservableList<Contact> contacts;
+	@FXML
+	private TableView<Contact> tableContacts;
+	@FXML private TableColumn<Contact, String> firstName;
+	@FXML private TableColumn<Contact, String> lastName;
+	@FXML private TableColumn<Contact, String> address;
+	@FXML private TableColumn<Contact, String> phone1;
+	@FXML private TableColumn<Contact, String> phone2;
+	@FXML private TableColumn<Contact, String> email1;
+	@FXML private TableColumn<Contact, String> email2;
+	@FXML private TableColumn<Contact, String> category;
+	@FXML private TableColumn<Contact, String> city;
+	private static ArrayList<String> searchCategories;
+	private static final String nameHebrew = "שם";
+	private static final String typeHebrew = "קבוצה";
+	private static final String typeGroupHebrew = "מחלקה";
 	
-	@FXML TextField findName;
-	@FXML ChoiceBox findAccording;
-	@FXML ChoiceBox changeView;
-	DataContext layerFactory;
-	private ArrayList<String> type;
-	private ArrayList<String> typeGroup;
-	private final String nameHebraw = "שם";
-	private final String typeHebraw = "קבוצה";
-	private final String typeGroupHebraw = "מחלקה";
+	
+	
 
+	static {
+		searchCategories= new ArrayList<String>(3); 
+		searchCategories.add(nameHebrew);
+		searchCategories.add(typeHebrew);
+		searchCategories.add(typeGroupHebrew);
+		
+		
+	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		System.out.println("intialize");
-	
-		intializeDataFromDb();
+		getGroupsAndTypes();
 		initializeSelectOption();
+		initTable();
+		contacts = FXCollections.observableArrayList();
+		tableContacts.setItems(contacts);
 		
-		
-		
-		
-	
+
 	}
-	private void intializeDataFromDb(){
-		type = new ArrayList<String>();
-		typeGroup = new ArrayList<String>();
+	
+	public void initTable() {
+		firstName.setCellValueFactory(new PropertyValueFactory<Contact, String>("firstName"));
+		lastName.setCellValueFactory(new PropertyValueFactory<Contact, String>("lastName"));
+		address.setCellValueFactory(new PropertyValueFactory<Contact, String>("address"));
+		phone1.setCellValueFactory(new PropertyValueFactory<Contact, String>("phone1"));
+		phone2.setCellValueFactory(new PropertyValueFactory<Contact, String>("phone2"));
+		email1.setCellValueFactory(new PropertyValueFactory<Contact, String>("email1"));
+		email2.setCellValueFactory(new PropertyValueFactory<Contact, String>("email2"));
+		city.setCellValueFactory(new PropertyValueFactory<Contact, String>("CityName"));
+		category.setCellValueFactory(new PropertyValueFactory<Contact, String>("ContactTypeNames"));
+	}
+	//get all contacts types and groups from DB
+	private void getGroupsAndTypes() {
+		contactTypes = new HashMap<String,Integer>();
+		contactGroups = new HashMap<String, Integer>();
 		try {
-			layerFactory = SpcaDataLayerFactory.getDataContext();
-		
-		int size = layerFactory.getContactTypes().getColumnNames().length;
-		int size2 = layerFactory.getContactTypes().getRows().length;
-		int size3 = layerFactory.getContactTypeGroups().getColumnNames().length;
-		int size4 = layerFactory.getContactTypeGroups().getRows().length;
-		
-		for(int i=0;i<size2;i++){
-				type.add((String)layerFactory.getContactTypes().getRows()[i].getObject("Name"));
-		}
-		
-		for(int i=0;i<size4;i++){
-				typeGroup.add((String)layerFactory.getContactTypeGroups().getRows()[i].getObject("Name"));
-		}
-		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+			database = SpcaDataLayerFactory.getDataContext();
 	
-	private void initializeSelectOption(){
-		ArrayList<String> array = new ArrayList<String>();
-		array.add(typeGroupHebraw);
-		array.add(typeHebraw);
-		array.add(nameHebraw);
-		ObservableList<String> categoryToSearch = FXCollections.observableArrayList(array);
+			DataRow[] types = database.getContactTypes().getRows();
+			DataRow[] groups = database.getContactTypeGroups().getRows();
+			int typesLength = types.length;
+			int groupsLength = groups.length;
+		
+			for (int i = 0; i < typesLength; i++) {
+				String name = (String) types[i].getObject("Name");
+				int id = (int)types[i].getObject("ID");
+				contactTypes.put(name, id);
+				
+			}
+
+			for (int i = 0; i < groupsLength; i++) {
+				String name = (String) groups[i].getObject("Name");
+				int id = (int)types[i].getObject("ID");
+				contactGroups.put(name, id);
+			}
+
+		} catch (IOException | SQLException e ) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void initializeSelectOption() {
+		ObservableList<String> categoryToSearch = FXCollections.observableArrayList(searchCategories);
+		
 		findAccording.setItems(categoryToSearch);
 		findAccording.setValue(findAccording.getItems().get(0));
+		
 		findAccording.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> arg0,
-					Number arg1, Number arg2) {
-				String newName = (String)(findAccording.getItems().get(((int)arg2)) );
-				System.out.println(newName);
-				
-				  checkView(newName);
-			}
-		    });
+					@Override
+					public void changed(ObservableValue<? extends Number> arg0,	Number arg1, Number arg2) {
+						String newName = (String) (findAccording.getItems().get(((int) arg2)));
+						checkView(newName);
+					}
+				});
 		checkView(findAccording.getValue().toString());
-		
-		
-		
-		try {
-			System.out.println(layerFactory.getContactTypes());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
-	public void checkView(String newName){
-		System.out.println("inside it");
-		if(newName.equals(nameHebraw)){
-			System.out.println("inside name");
+
+	public void checkView(String newName) {
+		if (newName.equals(nameHebrew)) {
 			findName.setVisible(true);
 			changeView.setVisible(false);
-		}
-		else if(newName.equals(typeHebraw)){
+		} else if (newName.equals(typeHebrew)) {
 			findName.setVisible(false);
 			changeView.setVisible(true);
-			changeCheckBoxView(type);
+			changeCheckBoxView(contactTypes.keySet());
+		} else {
+			findName.setVisible(false);
+			changeView.setVisible(true);
+			changeCheckBoxView(contactGroups.keySet());
+		}
+	}
+
+	@FXML
+	public void search() {
+		contacts.clear();
+		String contactName = null;
+		Integer[] type = null;
+		Integer[] group = null;
+		String selectedValue;
+		switch(findAccording.getValue()) {
+		case nameHebrew:
+			contactName = findName.getText();
+			break;
+		case typeHebrew:
+			selectedValue = changeView.getValue();
+			type = new Integer[1];
+			type[0] = this.contactTypes.get(selectedValue);
+			break;
+		case typeGroupHebrew:
+			selectedValue = changeView.getValue();
+			group = new Integer[1];
+			group[0] = this.contactGroups.get(selectedValue);
+		}
+		try {
+			DataResult result = database.getContacts(null, type, group, contactName, null);
+			DataRow[] contactsRows = result.getRows();
+			System.out.println(contactsRows);
+			System.out.println(contactsRows.length);
+			for(int j=0; j < result.getColumnNames().length; j++)
+				System.out.println(result.getColumnNames()[j]);
+			for(int i = 0; i < contactsRows.length; i++) {
+				
+					
+				this.contacts.add(createContact(contactsRows[i]));
+				
+			}
+		}catch(SQLException e) {
 			
 		}
-		else{
-			findName.setVisible(false);
-			changeView.setVisible(true);
-			changeCheckBoxView(typeGroup);
-		}
-	}
-	@FXML
-	public void search(){
-		
 	}
 	
-	private void changeCheckBoxView(ArrayList<String> types){
-		ObservableList<String> categoryToSearch = FXCollections.observableArrayList(types);
+	private Contact createContact(DataRow row) {
+		Contact contact = new Contact();
+		contact.setFirstName((String)row.getObject("FirstName"));
+		contact.setLastName((String)row.getObject("LastName"));
+		contact.setPhone1((String)row.getObject("Phone_1"));
+		contact.setPhone2((String)row.getObject("Phone_2"));
+		contact.setEmail1((String)row.getObject("Email_1"));
+		contact.setEmail2((String)row.getObject("Email_2"));
+		contact.setAddress((String)row.getObject("Address"));
+		contact.setCity((String)row.getObject("CityName"));
+		contact.setType((String)row.getObject("ContactTypeNames"));
+		System.out.println(contact);
+		
+		return contact;
+	}
+	@FXML
+	private void accept() {
+		Contact selected = tableContacts.getSelectionModel().getSelectedItem();
+		System.out.println(c);
+	}
+
+	private void changeCheckBoxView(Collection<String> elements) {
+		ObservableList<String> categoryToSearch = FXCollections.observableArrayList(elements);
 		changeView.setItems(categoryToSearch);
 		changeView.setValue(changeView.getItems().get(0));
 	}
