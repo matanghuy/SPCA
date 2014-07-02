@@ -48,8 +48,8 @@
             <TableColumn fx:id="phone2" text="טלפון 2" />
     		 <TableColumn fx:id="mail1" text="אימייל 1" />
     		 <TableColumn fx:id="mail2" text="אימייל 2" />
-    		  <TableColumn fx:id="category" text="מחלקה" />
-           <TableColumn fx:id="city" text="עיר" />
+    		  <TableColumn fx:id="finalcategory" text="מחלקה" />
+          	 <TableColumn fx:id="city" text="עיר" />
         </columns>
       
       </TableView>

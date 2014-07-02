@@ -7,14 +7,24 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
 import spca.datalayer.DataContext;
+import spca.datalayer.DataResult;
+import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -26,12 +36,16 @@ public class AddContact  implements Initializable{
 	@FXML TextField firstName;
 	@FXML TextField lastName;
 	@FXML TextField phoneNumber;
-	@FXML TextField bDate;
+	
 	@FXML TextField email;
 	@FXML TextField lbDate;
 	@FXML TextField fullAddress;
 	@FXML TextField country;
 	@FXML TextField identityNumber;
+	@FXML ChoiceBox bYear;
+	@FXML ChoiceBox bMonth;
+	@FXML ChoiceBox bDay;
+	@FXML ChoiceBox category;
 	@FXML Label validInput;
 	@FXML Label lfirstName;
 	@FXML Label llastName;
@@ -43,12 +57,75 @@ public class AddContact  implements Initializable{
 	DataContext layerFactory;
 	private final String datePattern = "dd/MM/yyyy";
 	private SimpleDateFormat formatter;
-	
+	private String bDate;
+	HashMap<String,Integer> categoryMap = new HashMap<String, Integer>();
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	
+		fillExpansesTypes();
+		fillTimeBoxes();
 	}
+	
+	private void fillTimeBoxes(){
+		ArrayList<String> year = new ArrayList<String>();
+		ArrayList<String> month = new ArrayList<String>();
+		ArrayList<String> day = new ArrayList<String>();
+		
+		for(int i=1;i<31;i++){
+			day.add(i+"");
+		}
+		for(int i=1;i<13;i++){
+			month.add(i+"");
+		}
+		for(int i=50;i<100;i++){
+			year.add("19"+i);
+		}
+		for(int i=0;i<10;i++){
+			year.add("20"+i+"0");
+		}
+		for(int i=10;i<50;i++){
+			year.add("20"+i);
+		}
+		ObservableList<String> yearObserver = FXCollections.observableArrayList(year);
+		ObservableList<String> monthObserver = FXCollections.observableArrayList(month);
+		ObservableList<String> dayObserver = FXCollections.observableArrayList(day);
+		bYear.setItems(yearObserver);
+		bMonth.setItems(monthObserver);
+		bDay.setItems(dayObserver);
+		bYear.setValue(bYear.getItems().get(0));
+		bMonth.setValue(bMonth.getItems().get(0));
+		bDay.setValue(bDay.getItems().get(0));
+	
+		
+	}
+	private void fillExpansesTypes() {
+		//TODO:here we need to get types from database
+		ArrayList<String> type = fillTypersFromDb();
+		ObservableList<String> types = FXCollections.observableArrayList(type);
+		category.setItems(types);
+		category.setValue(category.getItems().get(0));
+	}
+	
+private ArrayList<String> fillTypersFromDb(){
+	ArrayList<String> typeName = null;
+	typeName = new ArrayList<String>();
+	try {
+		layerFactory = SpcaDataLayerFactory.getDataContext();
+		DataRow[] data = layerFactory.getContactTypes().getRows();
+		int size = data.length;
+		for(int i=0;i<size;i++){
+			typeName.add(data[i].getString(1));
+			categoryMap.put(data[i].getString(1), i+1);
+		}
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return typeName;
+}
 	
 	
 	@FXML
@@ -165,55 +242,26 @@ public class AddContact  implements Initializable{
 	private void writeUserToDb(){
 		try {
 			layerFactory = SpcaDataLayerFactory.getDataContext();
-		/*	int size = layerFactory.getContactTypes().getColumnNames().length;
-			int size2 = layerFactory.getContactTypes().getRows().length;
-			int size3 = layerFactory.getContactTypeGroups().getColumnNames().length;
-			int size4 = layerFactory.getContactTypeGroups().getRows().length;
-			Integer[] aray = {1,2,3}; 
-			*/int size5 = layerFactory.getContacts(null,null, null, null, null).getColumnNames().length;
-			int size6 = layerFactory.getContacts(null,null, null, null, null).getRows().length;
-			
-			
+			bDate = bDay.getValue() + "/" + bMonth.getValue() +"/" +bYear.getValue();
 			formatter = new SimpleDateFormat(datePattern);
-			java.util.Date javaDate = formatter.parse(bDate.getText());
+			java.util.Date javaDate = formatter.parse(bDate);
 			Timestamp startDate = new Timestamp(javaDate.getTime());
-			
-			
 			Integer cityNuber = SharedMethodes.city.get(country.getText());
 			System.out.println(cityNuber);
 			
-		//	layerFactory.addOrUpdateContact(firstName.getText(), lastName.getText(), phoneNumber.getText()
-		//			, null, email.getText(), null , fullAddress.getText(),
-		//			cityNuber, null, identityNumber.getText(), startDate);
-		
+			DataResult data = layerFactory.addOrUpdateContact(firstName.getText(), lastName.getText(), phoneNumber.getText()
+					, null, email.getText(), null , fullAddress.getText(),
+					cityNuber, null, identityNumber.getText(), startDate);
+			Integer returnValue = (Integer)data.getReturnValue();
+			layerFactory.addTypeForContact(returnValue, categoryMap.get(category.getValue()));
 			
-	/*		for(int i=0;i<layerFactory.getCities().getRows().length;i++){
-				for(int j=0;j<layerFactory.getCities().getColumnNames().length;j++)
-					System.out.println(layerFactory.getCities().getRows()[i].getString(j));
-			}
-				//System.out.println(layerFactory.getCities().getColumnNames().);
-			
-			for(int i=0;i<size2;i++){
-					System.out.println(layerFactory.getContactTypes().getRows()[i].getObject("Name"));
-					
-			}*/
-		/*	
-			for(int i=0;i<size4;i++){
-				for(int j=0;j<size3;j++)
-					System.out.println(layerFactory.getContactTypeGroups().getRows()[i].getString(j));
-			}
-			*/
-			for(int i=0;i<size6;i++){
-				for(int j=0;j<size5;j++)
-					System.out.println(layerFactory.getContacts(null,null, null, null, null).getRows()[i].getString(j));
-			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

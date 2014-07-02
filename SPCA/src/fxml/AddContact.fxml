@@ -22,11 +22,12 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.CheckBox?>
 
 
 <ScrollPane fitToWidth="true" fx:controller="controllers.AddContact" xmlns:fx="http://javafx.com/fxml"	xmlns="http://javafx.com/javafx/2.2">
 <VBox id="mainPanel" nodeOrientation="RIGHT_TO_LEFT" alignment="CENTER" spacing="20" >	
-	<GridPane hgap="5" vgap="15" alignment="CENTER">
+	<GridPane hgap="5" vgap="10" alignment="CENTER">
 		<columnConstraints>
 			<ColumnConstraints  percentWidth="20" />
 			<ColumnConstraints  percentWidth="15" />
@@ -36,19 +37,29 @@
 		<TextField  fx:id="firstName"  		GridPane.columnIndex="2" 	GridPane.rowIndex="0" maxWidth="280" onKeyReleased="#statusChange"/>
 				<Label text="שם משפחה"  fx:id="llastName"	GridPane.columnIndex="1"	GridPane.rowIndex="1" />
 		<TextField  fx:id="lastName"  		GridPane.columnIndex="2" 	GridPane.rowIndex="1" maxWidth="280" onKeyReleased="#statusChange"/>
-		<Label text="טלפון" 		fx:id="lphoneNumber"		GridPane.columnIndex="1"	GridPane.rowIndex="2" />
-		<TextField fx:id="phoneNumber" 		GridPane.columnIndex="2" 	GridPane.rowIndex="2"  maxWidth="280" onKeyReleased="#statusChange"/>
-		<Label text="תעודת זהות" 		fx:id="lidentityNumber"		GridPane.columnIndex="1"	GridPane.rowIndex="3" />
-		<TextField fx:id="identityNumber" 		GridPane.columnIndex="2" 	GridPane.rowIndex="3"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="טלפון 1" 		fx:id="lphoneNumber"		GridPane.columnIndex="1"	GridPane.rowIndex="3" />
+		<TextField fx:id="phoneNumber" 		GridPane.columnIndex="2" 	GridPane.rowIndex="3"  maxWidth="280" onKeyReleased="#statusChange"/>
+			<Label text="טלפון 2" 		fx:id="lphoneNumber2"		GridPane.columnIndex="1"	GridPane.rowIndex="4" />
+		<TextField fx:id="phoneNumber2" 		GridPane.columnIndex="2" 	GridPane.rowIndex="4"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="תעודת זהות" 		fx:id="lidentityNumber"		GridPane.columnIndex="1"	GridPane.rowIndex="5" />
+		<TextField fx:id="identityNumber" 		GridPane.columnIndex="2" 	GridPane.rowIndex="5"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="אימייל"  	fx:id="lemail"		GridPane.columnIndex="1"	GridPane.rowIndex="6" />
+		<TextField fx:id="email"  			GridPane.columnIndex="2"	GridPane.rowIndex="6"  maxWidth="280" onKeyReleased="#statusChange"/>
+			<Label text="אימייל"  	fx:id="lemail2"		GridPane.columnIndex="1"	GridPane.rowIndex="7" />
+		<TextField fx:id="email2"  			GridPane.columnIndex="2"	GridPane.rowIndex="7"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="כתובת"  	fx:id="lfullAddress"		GridPane.columnIndex="1"	GridPane.rowIndex="8" />
+		<TextField fx:id="fullAddress" 		GridPane.columnIndex="2" 	GridPane.rowIndex="8"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="עיר"  	fx:id="lcountry"		GridPane.columnIndex="1"	GridPane.rowIndex="9" />
+		<TextField fx:id="country" 		GridPane.columnIndex="2" 	GridPane.rowIndex="9"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="תאריך לידה"  	fx:id="lbdate"		GridPane.columnIndex="1"	GridPane.rowIndex="10" />
+		<GridPane GridPane.columnIndex="2" GridPane.rowIndex="10" nodeOrientation="LEFT_TO_RIGHT"  maxWidth="280">
+			<ChoiceBox  fx:id="bDay" 		GridPane.columnIndex="2" 	GridPane.rowIndex="10"  maxWidth="280" onKeyReleased="#statusChange"/>
+			<ChoiceBox fx:id="bMonth" 		GridPane.columnIndex="3" 	GridPane.rowIndex="10"  maxWidth="280" onKeyReleased="#statusChange"/>
+			<ChoiceBox fx:id="bYear" 		GridPane.columnIndex="4" 	GridPane.rowIndex="10"  maxWidth="280" onKeyReleased="#statusChange"/>
+		</GridPane>
+		<Label text="קטגוריה"  	fx:id="lbdate"		GridPane.columnIndex="1"	GridPane.rowIndex="11" />
+		<ChoiceBox  fx:id="category" 		GridPane.columnIndex="2" 	GridPane.rowIndex="11"  maxWidth="280" onKeyReleased="#statusChange"/>
 	
-		<Label text="אימייל"  	fx:id="lemail"		GridPane.columnIndex="1"	GridPane.rowIndex="4" />
-		<TextField fx:id="email"  			GridPane.columnIndex="2"	GridPane.rowIndex="4"  maxWidth="280" onKeyReleased="#statusChange"/>
-		<Label text="כתובת"  	fx:id="lfullAddress"		GridPane.columnIndex="1"	GridPane.rowIndex="5" />
-		<TextField fx:id="fullAddress" 		GridPane.columnIndex="2" 	GridPane.rowIndex="5"  maxWidth="280" onKeyReleased="#statusChange"/>
-		<Label text="עיר"  	fx:id="lcountry"		GridPane.columnIndex="1"	GridPane.rowIndex="6" />
-		<TextField fx:id="country" 		GridPane.columnIndex="2" 	GridPane.rowIndex="6"  maxWidth="280" onKeyReleased="#statusChange"/>
-			<Label text="תאריך לידה"  	fx:id="lbdate"		GridPane.columnIndex="1"	GridPane.rowIndex="7" />
-		<TextField fx:id="bDate" 		GridPane.columnIndex="2" 	GridPane.rowIndex="7"  maxWidth="280" onKeyReleased="#statusChange"/>
 	</GridPane>
 	<HBox alignment="CENTER" spacing="20">
 		<Button text="ביטול" minWidth="100" onAction="#cancel"/>
