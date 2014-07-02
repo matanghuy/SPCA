@@ -155,12 +155,11 @@ public class TransController implements Initializable{
 	}
 	
 	private void findContact(){
-		System.out.println("got here");
-		openDialog("Find Contact","/FindContact.fxml");
+		openDialog("Find Contact","/fxml/FindContact.fxml");
 	}
 	
 	private void addCustomer() {
-		openDialog("Add Contact", "/AddContact.fxml");
+		openDialog("Add Contact", "/fxml/AddContact.fxml");
 	}
 	private void openDialog(String title, String fxml) {
 		try {

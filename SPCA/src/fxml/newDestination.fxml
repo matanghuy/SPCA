@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Button?>
+
+<VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewDestination">
+	<children>
+	<Label text = "הוספת יעד חדש"/>
+	<VBox alignment="CENTER" spacing="20">
+	<children>
+		<HBox spacing = "10">
+			<Label text = "הכנס שנה"/>
+			<TextField fx:id = "year" maxWidth="45"></TextField>
+		</HBox>
+		<HBox spacing = "20">
+			<Label text = "בחר חודש"/>
+			<ComboBox fx:id="month" />
+		</HBox>
+		<HBox spacing = "10">
+			<Label text = "הכנס קטגוריה"/>
+			<TextField fx:id = "category" maxWidth="180"></TextField>
+			<!--  <Label text = "ש״ח"/>-->
+		</HBox>
+		<HBox spacing = "10">
+			<Label text = "הכנס סכום יעד"/>
+			<TextField fx:id = "destination" maxWidth="60"></TextField>
+			<!--  <Label text = "ש״ח"/>-->
+		</HBox>
+		
+	</children>
+	</VBox>
+	<HBox alignment="CENTER">
+			<Button fx:id = "send" text = "שלח" onAction = "#send"/>
+		</HBox>
+	<Label fx:id = "wrongInput"/>
+	</children>
+</VBox>
+

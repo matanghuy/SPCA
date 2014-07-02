@@ -187,21 +187,21 @@ public class AddContact  implements Initializable{
 					System.out.println(layerFactory.getCities().getRows()[i].getString(j));
 			}*/
 				//System.out.println(layerFactory.getCities().getColumnNames().);
-	/*		
-			for(int i=0;i<size2;i++){
-				for(int j=0;j<size;j++)
-					System.out.println(layerFactory.getContactTypes().getRows()[i].getString(j));
-			}
 			
+			for(int i=0;i<size2;i++){
+					System.out.println(layerFactory.getContactTypes().getRows()[i].getObject("Name"));
+					
+			}
+		/*	
 			for(int i=0;i<size4;i++){
 				for(int j=0;j<size3;j++)
 					System.out.println(layerFactory.getContactTypeGroups().getRows()[i].getString(j));
 			}
-			
+			*/
 			for(int i=0;i<size6;i++){
 				for(int j=0;j<size5;j++)
-					System.out.println(layerFactory.getContacts(null,null, null, null, null).getRows()[i].getString(j));
-			}*/
+					System.out.println(layerFactory.getContacts(null,null, null, "בלסיאנו", null).getRows()[i].getString(j));
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
