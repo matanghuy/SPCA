@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
-
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FindContact">
 	<HBox alignment="CENTER" spacing="10">
@@ -29,7 +24,7 @@
 			<TableColumn fx:id="phone2" text="טלפון 2" />
 			<TableColumn fx:id="email1" text="אימייל 1" />
 			<TableColumn fx:id="email2" text="אימייל 2" />
-			<TableColumn fx:id="category" text="מחלקה" />
+			<TableColumn fx:id="category" text="קבוצה" />
 			<TableColumn fx:id="city" text="עיר" />
 		</columns>
 	</TableView>

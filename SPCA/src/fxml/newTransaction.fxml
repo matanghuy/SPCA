@@ -37,8 +37,8 @@
 		<fx:define>
 			<ToggleGroup fx:id="contactType"/>
 		</fx:define>
-		<RadioButton fx:id="rbContactTrue" text="שייך איש קשר¨" textAlignment="RIGHT" toggleGroup="$contactType" onAction="#handleRadios" selected="true"/>
-		<RadioButton fx:id="rbContactFalse" text="ללא איש קשר¨" textAlignment="RIGHT" toggleGroup="$contactType" onAction="#handleRadios"/>
+		<RadioButton fx:id="rbContactTrue" text="שייך איש קשר" textAlignment="RIGHT" toggleGroup="$contactType" onAction="#handleRadios" selected="true"/>
+		<RadioButton fx:id="rbContactFalse" text="ללא איש קשר" textAlignment="RIGHT" toggleGroup="$contactType" onAction="#handleRadios"/>
 	</FlowPane>
 
 	<GridPane hgap="5" vgap="15" alignment="CENTER">
@@ -60,16 +60,18 @@
 	</GridPane>
 
 	<HBox spacing="15">
-		<Label text="סוג הוצאה”" />
-		<ComboBox fx:id="expenseType"/>
+		<Label text="סוג הוצאה" />
+		<ComboBox fx:id="cbTransactionType"/>
 	</HBox>
 	
 	<HBox spacing="10">
-		<Label text="פריט˜"/>
+		<Label text="פריט"/>
 		<TextField fx:id="tfItem"/>
 		<Label text="סכום"/>
 		<TextField fx:id="tfCost"/>
-		<Button fx:id="btnAddItem" text="הוסף" onAction="#handleAddItem"/>
+        <Label text="הערות"/>
+        <TextField fx:id="tfItemComment"/>
+        <Button fx:id="btnAddItem" text="הוסף" onAction="#handleAddItem"/>
 		<Button fx:id="btnRemoveItem" text="הסר" onAction="#handleRemoveItem"/>
 		
 	</HBox>
@@ -80,9 +82,19 @@
     <columns>
         <TableColumn text="פריט" fx:id="colItemName"/>
         <TableColumn text="סכום" fx:id="colItemCost"/>
+        <TableColumn text="הערות" fx:id="colItemComment"/>
     </columns>
     </TableView>
-    
+    <HBox spacing="10">
+        <Button fx:id="addAnimal" text="שייך חיה" onAction="#attachAnimal"/>
+        <VBox>
+            <Label text="סוג:"/>
+            <Label fx:id="lblAnimalType"/>
+            <Label text="שם:"/>
+            <Label fx:id="lblAnimalName"/>
+        </VBox>
+
+    </HBox>
 	<GridPane id="payment" hgap="10" vgap="5" nodeOrientation="LEFT_TO_RIGHT" >
 		<Label text="סהכ לתשלום" 						GridPane.columnIndex="1" GridPane.rowIndex="0" />
 		<Label fx:id="lblTotalToPay" text="0.0"			GridPane.columnIndex="0" GridPane.rowIndex="0" />
@@ -92,8 +104,10 @@
 		<TextField fx:id="tfCredit"						GridPane.columnIndex="0" GridPane.rowIndex="2" onKeyReleased="#paymentChanged"/>
 		<Label text="צ'ק"								GridPane.columnIndex="1" GridPane.rowIndex="3" />
 		<TextField fx:id="tfCheck"						GridPane.columnIndex="0" GridPane.rowIndex="3" onKeyReleased="#paymentChanged"/>
-		<Label text=":סהכ שולם" 						GridPane.columnIndex="1" GridPane.rowIndex="4" />
-		<Label fx:id="lblTotalPaid" text="0.0"			GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label text="העברה"								GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <TextField fx:id="tfTransfer"					GridPane.columnIndex="0" GridPane.rowIndex="4" onKeyReleased="#paymentChanged"/>
+		<Label text=":סהכ שולם" 						GridPane.columnIndex="1" GridPane.rowIndex="5" />
+		<Label fx:id="lblTotalPaid" text="0.0"			GridPane.columnIndex="0" GridPane.rowIndex="5" />
 
 	</GridPane>
 	<HBox alignment="CENTER" spacing="20">

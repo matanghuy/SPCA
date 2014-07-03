@@ -12,6 +12,8 @@ public class Contact {
 	private SimpleStringProperty address;
 	private SimpleStringProperty city;
 	private SimpleStringProperty type;
+    private SimpleStringProperty birthDay;
+
 	private int id;
 	
 	public Contact() {	
@@ -24,6 +26,7 @@ public class Contact {
 		address = new SimpleStringProperty();
 		city = new SimpleStringProperty();
 		type = new SimpleStringProperty();
+        birthDay = new SimpleStringProperty();
 		
 	}
 
@@ -41,25 +44,25 @@ public class Contact {
 		this.lastName.set(lastName);
 	}
 	public String getPhone1() {
-		return phone1.get();
+		return phone1.get() == null ? " " : phone1.get();
 	}
 	public void setPhone1(String phone1) {
 		this.phone1.set(phone1);
 	}
 	public String getPhone2() {
-		return phone2.get();
+        return phone2.get() == null ? " " : phone2.get();
 	}
 	public void setPhone2(String phone2) {
 		this.phone2.set(phone2);
 	}
 	public String getEmail1() {
-		return email1.get();
+		return email1.get() == null ? " " : email1.get();
 	}
 	public void setEmail1(String email1) {
 		this.email1.set(email1);
 	}
 	public String getEmail2() {
-		return email2.get();
+        return email2.get() == null ? " " : email2.get();
 	}
 	public void setEmail2(String email2) {
 		this.email2.set(email2);
@@ -88,6 +91,12 @@ public class Contact {
 	public int getId() {
 		return id;
 	}
+    public String getBirthDay() {
+        return birthDay.get();
+    }
+    public void setBirthDay(String birthDay) {
+        this.birthDay.set(birthDay);
+    }
 
     public String getFullName() {
         return getFirstName() + " " + getLastName();
@@ -98,6 +107,7 @@ public class Contact {
     public String getPhoneNumbers() {
         return getPhone1() + "\t" + getPhone2();
     }
+
 	@Override
 	public String toString() {
 		return "Contact [firstName=" + firstName.get() + ", lastName=" + lastName.get()

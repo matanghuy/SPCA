@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FindAnimal">
+    <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="btnSearch" onAction="#search" text="חפש" />
+            <TextField fx:id="findName" nodeOrientation="RIGHT_TO_LEFT"/>
+    </HBox>
+    <TableView fx:id="tableAnimals"  editable="false" nodeOrientation="RIGHT_TO_LEFT" >
+        <columns>
+            <TableColumn fx:id="colName" text="שם" />
+            <TableColumn fx:id="colChipNumber" text="מס שבב" />
+            <TableColumn fx:id="colType" text="סוג" />
+            <TableColumn fx:id="colSourceCity" text="עיר מקור" />
+        </columns>
+    </TableView>
+    <Button fx:id="accept" onAction="#accept" text="בחר"/>
+
+</VBox>

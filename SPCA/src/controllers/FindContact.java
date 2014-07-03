@@ -1,14 +1,5 @@
 package controllers;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-
 import beans.Contact;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,6 +18,11 @@ import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.*;
 
 public class FindContact implements Initializable {
 
@@ -85,8 +81,8 @@ public class FindContact implements Initializable {
 		phone2.setCellValueFactory(new PropertyValueFactory<Contact, String>("phone2"));
 		email1.setCellValueFactory(new PropertyValueFactory<Contact, String>("email1"));
 		email2.setCellValueFactory(new PropertyValueFactory<Contact, String>("email2"));
-		city.setCellValueFactory(new PropertyValueFactory<Contact, String>("CityName"));
-		category.setCellValueFactory(new PropertyValueFactory<Contact, String>("ContactTypeNames"));
+		city.setCellValueFactory(new PropertyValueFactory<Contact, String>("city"));
+		category.setCellValueFactory(new PropertyValueFactory<Contact, String>("type"));
 	}
 	//get all contacts types and groups from DB
 	private void getGroupsAndTypes() {
@@ -174,18 +170,11 @@ public class FindContact implements Initializable {
 		try {
 			DataResult result = database.getContacts(null, type, group, contactName, null);
 			DataRow[] contactsRows = result.getRows();
-			System.out.println(contactsRows);
-			System.out.println(contactsRows.length);
-			for(int j=0; j < result.getColumnNames().length; j++)
-				System.out.println(result.getColumnNames()[j]);
 			for(int i = 0; i < contactsRows.length; i++) {
-				
-					
 				this.contacts.add(createContact(contactsRows[i]));
-				
 			}
 		}catch(SQLException e) {
-			
+			System.out.println("Error while getting data from database" + e.getMessage());
 		}
 	}
 	
@@ -200,8 +189,8 @@ public class FindContact implements Initializable {
 		contact.setAddress((String)row.getObject("Address"));
 		contact.setCity((String)row.getObject("CityName"));
 		contact.setType((String)row.getObject("ContactTypeNames"));
-		System.out.println(contact);
-		
+        contact.setId((Integer)row.getObject("ContactId"));
+
 		return contact;
 	}
 	@FXML

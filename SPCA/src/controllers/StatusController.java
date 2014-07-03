@@ -1,5 +1,20 @@
 package controllers;
 
+import beans.StatusByMonth;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import spca.datalayer.DataContext;
+import spca.datalayer.DataResult;
+import spca.datalayer.DataRow;
+import spca.datalayer.SpcaDataLayerFactory;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -11,25 +26,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
-import beans.Contact;
-import beans.StatusByMonth;
-import beans.Transaction;
-import spca.datalayer.DataContext;
-import spca.datalayer.DataResult;
-import spca.datalayer.DataRow;
-import spca.datalayer.SpcaDataLayerFactory;
-import sun.util.resources.CalendarData;
-import controllers.TransController.PurchaseItem;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class StatusController implements Initializable{
 	

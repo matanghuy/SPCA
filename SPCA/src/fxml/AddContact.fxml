@@ -1,29 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.collections.*?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.CheckBox?>
-
 
 <ScrollPane fitToWidth="true" fx:controller="controllers.AddContact" xmlns:fx="http://javafx.com/fxml"	xmlns="http://javafx.com/javafx/2.2">
 <VBox id="mainPanel" nodeOrientation="RIGHT_TO_LEFT" alignment="CENTER" spacing="20" >	
@@ -49,8 +28,8 @@
 		<TextField fx:id="email2"  			GridPane.columnIndex="2"	GridPane.rowIndex="7"  maxWidth="280" onKeyReleased="#statusChange"/>
 		<Label text="כתובת"  	fx:id="lfullAddress"		GridPane.columnIndex="1"	GridPane.rowIndex="8" />
 		<TextField fx:id="fullAddress" 		GridPane.columnIndex="2" 	GridPane.rowIndex="8"  maxWidth="280" onKeyReleased="#statusChange"/>
-		<Label text="עיר"  	fx:id="lcountry"		GridPane.columnIndex="1"	GridPane.rowIndex="9" />
-		<TextField fx:id="country" 		GridPane.columnIndex="2" 	GridPane.rowIndex="9"  maxWidth="280" onKeyReleased="#statusChange"/>
+		<Label text="עיר"  	fx:id="lcity"		GridPane.columnIndex="1"	GridPane.rowIndex="9" />
+		<TextField fx:id="city" 		GridPane.columnIndex="2" 	GridPane.rowIndex="9"  maxWidth="280" onKeyReleased="#statusChange"/>
 		<Label text="תאריך לידה"  	fx:id="lbdate"		GridPane.columnIndex="1"	GridPane.rowIndex="10" />
 		<GridPane GridPane.columnIndex="2" GridPane.rowIndex="10" nodeOrientation="LEFT_TO_RIGHT"  maxWidth="280">
 			<ChoiceBox  fx:id="bDay" 		GridPane.columnIndex="2" 	GridPane.rowIndex="10"  maxWidth="280" onKeyReleased="#statusChange"/>
