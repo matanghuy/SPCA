@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -88,10 +89,25 @@ public class incomingReport  implements Initializable{
 		monthEnd.setItems(monthObserver);
 		dayStart.setItems(dayObserver);
 		dayEnd.setItems(dayObserver);
-		yearStart.setValue(yearStart.getItems().get(0));
-		yearEnd.setValue(yearEnd.getItems().get(0));
-		monthStart.setValue(monthStart.getItems().get(0));
-		monthEnd.setValue(monthEnd.getItems().get(0));
+		
+		String nextMonth,cuurentMonth,currentYear,nextYear;
+		int currentYearint = Calendar.getInstance().get(Calendar.YEAR);
+		int currentMonthint = Calendar.getInstance().get(Calendar.MONTH) + 1;
+		currentYear = currentYearint + "";
+		cuurentMonth = currentMonthint + "";
+		if(currentMonthint == 12){
+			nextMonth = 1+"";
+			nextYear = currentYearint + 1 + "";
+		}
+		else{
+			nextMonth = currentMonthint + 1 + "";
+			nextYear = currentYear;
+		}
+		
+		yearStart.setValue(currentYear);
+		yearEnd.setValue(nextYear);
+		monthStart.setValue(cuurentMonth);
+		monthEnd.setValue(nextMonth);
 		dayStart.setValue(dayStart.getItems().get(0));
 		dayEnd.setValue(dayEnd.getItems().get(0));
 	
@@ -166,17 +182,6 @@ public class incomingReport  implements Initializable{
 			
 			for(int i=0;i<result.getRows().length;i++){
 			this.transaction.add(creatTransaction(result.getRows()[i]));
-					
-				System.out.println(result.getRows()[i].getObject("ContactName"));
-				System.out.println(result.getRows()[i].getObject("TransactionDate")+"");
-				System.out.println(result.getRows()[i].getObject("TotalAmountPayed"));
-				System.out.println(result.getRows()[i].getObject("TotalAmountToPay"));
-				System.out.println(result.getRows()[i].getObject("TransactionTypeName"));
-				System.out.println(result.getRows()[i].getObject("Comments"));
-				
-				
-				
-		
 				
 			}
 				

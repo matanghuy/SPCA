@@ -100,7 +100,6 @@ public class FindYearlyStatus implements Initializable{
 			yearStart.setItems(yearObserver);
 			yearStart.setValue(yearStart.getItems().get(0));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -172,17 +171,11 @@ public class FindYearlyStatus implements Initializable{
 					budgetCategory = budgetCategory.trim();
 					Integer budgetAmount = (Integer)(((BigDecimal) (data3.getRows()[i].getObject("Amount"))).intValue());
 					budgetPerYear.put(budgetCategory, budgetAmount);
-					System.out.println("year category is: "+ budgetCategory);
-					System.out.println("year budget is: "+ budgetAmount);
 				}
 
 			}
 			for(int i=0;i<categoriesFound.size();i++){
 				this.status.add(CreateRow(categoriesFound.get(i)));
-				/*for(int j=0;j<monthes.length;j++){
-					System.out.println("the month is : "+(j+1));
-				System.out.println(	monthes[j].getSumPerCategory(categoriesFound.get(i)));
-				}*/
 			}
 		
 			
