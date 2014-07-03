@@ -9,6 +9,7 @@ import java.util.List;
 import beans.Animal;
 import beans.Contact;
 import beans.TransactionType;
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -16,7 +17,7 @@ import spca.datalayer.DataRow;
 import static spca.datalayer.SpcaDataLayerFactory.getDataContext;
 
 public class CommonUtils {
-
+    private static final Logger logger = Logger.getLogger(CommonUtils.class);
     public static Contact contact;
     public static Animal animal;
 	public static HashMap<String,Integer> citiesMap = new HashMap<String,Integer>();
@@ -34,16 +35,13 @@ public class CommonUtils {
 			DataRow[]  data = dataContext.getCities().getRows();
 			int size = data.length;
 			for(int i=0;i<size;i++){
-				System.out.println(data[i].getObject("ID"));
-				System.out.println(data[i].getObject("Name"));
-
 				String cityName = (String)data[i].getObject("Name");
 				Integer id = (Integer)data[i].getObject("ID");
-
 				citiesMap.put(cityName, id);
 			}
+            logger.info("Cities map has benn loaded");
 		} catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to initiate cities map", e);
         }
 	}
     public static List<TransactionType> getTransactionTypes() {
@@ -55,19 +53,12 @@ public class CommonUtils {
             for (int i = 0; i < rows.length; i++) {
                 types.add(new TransactionType(rows[i]));
             }
+            logger.info("Transaction types has been loaded");
             return types;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("failed to get transaction types from database", e);
         }
         return null;
     }
 
-//    public static void initTypes() {
-//        try {
-//            DataResult result = dataContext.getTransactionType();
-//            result.
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

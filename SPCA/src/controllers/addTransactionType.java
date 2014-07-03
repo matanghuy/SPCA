@@ -1,14 +1,6 @@
 package controllers;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
-import spca.datalayer.DataContext;
-import spca.datalayer.DataRow;
-import spca.datalayer.SpcaDataLayerFactory;
+import beans.TransactionType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,52 +9,43 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import org.apache.log4j.Logger;
+import spca.datalayer.DataContext;
+import spca.datalayer.SpcaDataLayerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class addTransactionType implements Initializable{
 	
-	
-	@FXML private ChoiceBox<String> category;
+	private static final Logger logger = Logger.getLogger(addTransactionType.class);
+	@FXML private ChoiceBox<TransactionType> category;
 	@FXML private TextField operationName;
-	DataContext layerFactory;
+	DataContext dataContext;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		fillExpensesTypes();
-		
-		}
-		private void fillExpensesTypes(){
-			ArrayList<String> type = fillTypersFromDb();
-			ObservableList<String> types = FXCollections.observableArrayList(type);
-			category.setItems(types);
-			category.setValue(category.getItems().get(0));
-		}
-		private ArrayList<String> fillTypersFromDb(){
-			ArrayList<String> typeName = null;
-			typeName = new ArrayList<String>();
-			try {
-				layerFactory = SpcaDataLayerFactory.getDataContext();
-				DataRow[] data = layerFactory.getTransactionType().getRows();
-				int size = data.length;
-				for(int i=0;i<size;i++){
-					typeName.add(data[i].getString(1));
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return typeName;
-		}
-		
+        try {
+            dataContext = SpcaDataLayerFactory.getDataContext();
+        } catch (IOException e) {
+            logger.error("Can't get data context", e);
+        }
+        List<TransactionType> transactionTypes = CommonUtils.getTransactionTypes();
+        ObservableList<TransactionType> typeObservableList = FXCollections.observableArrayList(transactionTypes);
+        category.setItems(typeObservableList);
+
+
+    }
 		@FXML
-		public void search(ActionEvent event){
+		public void create(ActionEvent event){
 			try {
-				layerFactory.addTransactionType(operationName.getText());
+				dataContext.addTransactionType(operationName.getText());
+                logger.info("New transaction type created: " + operationName.getText());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error("Error occurred while creating transaction type", e);
 			}
 			((Node)event.getSource()).getScene().getWindow().hide();
 		}

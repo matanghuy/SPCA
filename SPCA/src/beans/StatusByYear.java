@@ -18,7 +18,7 @@ public class StatusByYear {
 	private SimpleStringProperty december;
 	private SimpleStringProperty counter;
 	private SimpleStringProperty destination;
-	
+
 	public StatusByYear(){
 		this.category = new SimpleStringProperty();
 		this.january = new SimpleStringProperty();
@@ -48,10 +48,10 @@ public class StatusByYear {
 	public void setDestination(String destination) {
 		this.destination.set(destination);
 	}
-	
-	
+
+
 	public String getCategory() {
-		return category.get() ;
+		return category.get();
 	}
 	public void setCategory(String category) {
 		this.category.set(category);

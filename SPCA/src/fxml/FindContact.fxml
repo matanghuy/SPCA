@@ -2,8 +2,12 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FindContact">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
 	<HBox alignment="CENTER" spacing="10">
 		<GridPane hgap="5" vgap="15" alignment="CENTER"	nodeOrientation="RIGHT_TO_LEFT">
 			<Button fx:id="search" onAction="#search" text="חפש" GridPane.columnIndex="4" GridPane.rowIndex="0" />

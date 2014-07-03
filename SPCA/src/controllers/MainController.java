@@ -13,29 +13,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 public class MainController implements Initializable {
 
-	@FXML
-	private Button btnNewIncome;
-	@FXML
-	private Button btnShowIncome;
-	@FXML
-	private Button btnIncomeDest;
-	@FXML
-	private Button btnNewExpense;
-	@FXML
-	private Button btnShowExpense;
-	@FXML
-	private Button btnExpenseDest;
-	@FXML
-	private Button btnExpVsInc;
+    private static final Logger logger = Logger.getLogger(MainController.class);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		CommonUtils.initializeCity();
 
-		
 	}
 
 	@FXML
@@ -49,21 +36,32 @@ public class MainController implements Initializable {
 		case "btnShowIncome":
 			windowName = "incomingReport.fxml";
 			break;
-		case "btnIncomeDest":
-			windowName = "newTransaction.fxml";
-			break;
 		case "btnNewExpense":
 			windowName = "newTransaction.fxml";
 			break;
 		case "btnShowExpense":
-			windowName = "expensesReport.fxml";
+			windowName = "incomingReport.fxml";
 			break;
-		case "btnExpenseDest":
-			windowName = "newTransaction.fxml";
+		case "btnMonthlyDest":
+			windowName = "StatusByMonth.fxml";
+			break;
+        case "btnYearlyDest":
+			windowName = "FindYearlyStatus.fxml";
+			break;
+		case "btnAddMonthlyDest":
+			windowName = "newDestination.fxml";
+			break;
+        case "btnAddYearlyDest":
+			windowName = "newYearlyDestination.fxml";
+			break;
+        case "btnAddTransactionType":
+			windowName = "addTransactionType.fxml";
 			break;
 		default:
-			windowName = "errorMessage.fxml";
+			logger.error("Error occurred! cant find page to view");
+            windowName= "";
 		}
+
 		createNewWindow(windowName);
 		
 	}
@@ -74,7 +72,7 @@ public class MainController implements Initializable {
 			System.out.println(getClass().getResource("../fxml/"+windowName));
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/"+windowName));
 			Parent root = (Parent) loader.load();
-			Scene scene = new Scene(root, 800, 600);
+			Scene scene = new Scene(root, 1000, 800);
 			dialog.setScene(scene);
 			dialog.initModality(Modality.WINDOW_MODAL);
 			dialog.show();
