@@ -7,6 +7,7 @@
     <HBox alignment="CENTER" spacing="10">
             <Button fx:id="btnSearch" onAction="#search" text="חפש" />
             <TextField fx:id="findName" nodeOrientation="RIGHT_TO_LEFT"/>
+            <Label text = ": הכנס שם"></Label>
     </HBox>
     <TableView fx:id="tableAnimals"  editable="false" nodeOrientation="RIGHT_TO_LEFT" >
         <columns>

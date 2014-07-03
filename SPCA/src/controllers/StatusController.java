@@ -9,7 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -37,6 +39,11 @@ public class StatusController implements Initializable{
 	@FXML private TableColumn<StatusByMonth, String> colDestination;
 	@FXML private TableColumn<StatusByMonth, String> colSubject;
 	@FXML private TableColumn<StatusByMonth, String> colSum;
+	@FXML private Text startLabel;
+	@FXML private Text endLabel;
+	@FXML private Text startField;
+	@FXML private Text endField;
+	
 	DataContext layerFactory;
 	private ObservableList<StatusByMonth> statusByMonth;
 	private final String datePattern = "dd/MM/yyyy";
@@ -99,9 +106,11 @@ public class StatusController implements Initializable{
 
 	@FXML
 	public void search(){
+		statusByMonth.clear();
 		String startDate,endDate;
 		String endYear,endMonth;
 		Timestamp start,end;
+		
 		
 		try {
 			if(Integer.parseInt(month.getValue()) == 12){
@@ -124,36 +133,52 @@ public class StatusController implements Initializable{
 			System.out.println(start);
 			System.out.println(end);
 			
-			DataResult data3 = layerFactory.getBalanceTarget(null, null,null);
-			ArrayList<String> nameArray = new ArrayList<String>();
+			DataResult data3 = layerFactory.getBalanceTarget(null, start,end);
+			ArrayList<String> nameNotChecked = new ArrayList<String>();
+			ArrayList<Integer> totalDestination = new ArrayList<Integer>();
+			ArrayList<Integer> totalAmountToPaySum = new ArrayList<Integer>();
+			ArrayList<Integer> totalDifferenceSum = new ArrayList<Integer>();
 			for(int i=0;i<data3.getRows().length;i++){
 				System.out.println(data3.getRows()[i].getObject("Name"));
 				System.out.println(data3.getRows()[i].getObject("Amount"));
-				nameArray.add((String) data3.getRows()[i].getObject("Name"));
+				nameNotChecked.add((String) data3.getRows()[i].getObject("Name"));
+				totalDestination.add((Integer)((BigDecimal)data3.getRows()[i].getObject("Amount")).intValue());
 			}
-			Integer sum = 0;
-			for(int i=0;i<nameArray.size();i++){
-				Integer[] names  = {transactionTypeMap.get(nameArray.get(i))};
-				DataResult data5 = null;
-				if(names[0] != null)	
-					data5 = layerFactory.getTransactions(null,
-							names, null, null, null, null,
-							null, start, end, null);
-				else{
-					
-					data5 = layerFactory.getTransactions(null,
-							null, null, null, null, null,
-							null, start, end, null); 
-				}
+			//boolean isFound = false;
+			
+			
+			DataResult data5 = layerFactory.getTransactions(null,
+					null, null, null, null, null,
+					null, start, end, null); 
+			
+			for(int i=0;i<nameNotChecked.size();i++){
+				Integer sum = 0;
 				for (int j = 0;j < data5.getRows().length; j++) {
 					//System.out.println(data5.getRows()[j].getObject("TotalAmountToPay"));
-					Object payment = ((data5.getRows()[j].getObject("TotalAmountToPay")));
-					if(payment != null)
-						sum += ((BigDecimal)payment).intValue();
-					
+					String typeName =(String) ((data5.getRows()[j].getObject("TransactionTypeName")));
+					System.out.println(typeName);
+					if(typeName.equals(nameNotChecked.get(i))){
+						Object payment = ((data5.getRows()[j].getObject("TotalAmountToPay")));
+						if(payment != null){
+							sum += ((BigDecimal)payment).intValue();
+						}
+					}
 				}
-				System.out.println(sum);
+				totalAmountToPaySum.add(sum);
+				totalDifferenceSum.add((sum - totalDestination.get(i)));
+				this.statusByMonth.add(createStatusByMonth(nameNotChecked.get(i),
+						totalDestination.get(i),totalAmountToPaySum.get(i),totalDifferenceSum.get(i)));
+				System.out.println("name is : "+nameNotChecked.get(i) + "destination is: "+totalDestination.get(i)+
+						" total payed is: "+totalAmountToPaySum.get(i) + " difference is : "+totalDifferenceSum.get(i));
 			}
+			
+			
+			startLabel.setVisible(true);
+			startField.setText(startDate);
+			startField.setVisible(true);
+			endLabel.setVisible(true);
+			endField.setText(endDate);
+			endField.setVisible(true);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,16 +188,17 @@ public class StatusController implements Initializable{
 		}
 	}
 	
-/*	private StatusByMonth createStatusByMonth(DataRow row) {
+	private StatusByMonth createStatusByMonth(String name,Integer destination, Integer AmountToPay,Integer difference) {
+		
 		StatusByMonth status = new StatusByMonth();
-		status.setComment(((String)row.getObject("FirstName")));
-		status.setLastName((String)row.getObject("LastName"));
-		status.setPhone1((String)row.getObject("Phone_1"));
-		status.setPhone2((String)row.getObject("Phone_2"));
+		status.setComment(((String)(difference+"")));
+		status.setSubject((String)(name));
+		status.setDestination((String)(destination + ""));
+		status.setTotal((String)(AmountToPay + ""));
 		System.out.println(status);
 		
-		return contact;
-	}*/
+		return status;
+	}
 	
 	public void initTable() {
 		colStatus.setCellValueFactory(new PropertyValueFactory<StatusByMonth, String>("Comment"));

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableView?>
+
+<VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="20" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controllers.FindYearlyStatus">
+	<padding>
+		<Insets bottom="20" left="20" right="20" top="20" />
+	</padding>
+   <children>
+   	<Label alignment="BASELINE_CENTER" text="דו״ח  שנתי" />
+   	<HBox id="datePane" spacing="10" alignment="CENTER">
+      <children>
+      		<Label id="date" alignment="BASELINE_CENTER" text="הכנס שנה" />
+      		<ComboBox fx:id="yearStart" />
+      </children>
+   	</HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" Alignment="CENTER" spacing="25" >
+         <children>
+      		
+      		<Button fx:id = "submit" text = "חפש" onAction = "#handleSearch" >
+      		</Button>
+         </children>
+      </HBox>
+      <TableView fx:id = "table" nodeOrientation="RIGHT_TO_LEFT">
+        <columns>
+       		<TableColumn fx:id="category" text="קטגוריה" />
+           <TableColumn fx:id="jan" text="ינואר" />
+           <TableColumn fx:id="feb" text="פבואר" />
+           <TableColumn fx:id="mar" text="מרץ" />
+            <TableColumn fx:id="apr" text="אפריל" />
+    		 <TableColumn fx:id="may" text="מאי" />
+    		 <TableColumn fx:id="jun" text="יוני" />
+    		 <TableColumn fx:id="july" text="יולי" />
+    		 <TableColumn fx:id="aug" text="אוגוסט" />
+    		 <TableColumn fx:id="sep" text="ספטמבר" />
+    		 <TableColumn fx:id="ock" text="אוקטובר" />
+    		 <TableColumn fx:id="nov" text="נובמבר" />
+    		 <TableColumn fx:id="dez" text="דצמבר" />
+    		</columns>
+      
+      
+      </TableView>
+   </children>
+</VBox>

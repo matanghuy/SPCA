@@ -35,6 +35,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import org.apache.log4j.Logger;
 
 public class TransController implements Initializable{
@@ -106,15 +107,33 @@ public class TransController implements Initializable{
     }
 
 	private void initDateBoxes() {
-		final ObservableList<Integer> days = FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
-		final ObservableList<Integer> months = FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10,11,12);
-		final ObservableList<Integer> years = FXCollections.observableArrayList(2010,2012,2013,2014,2015,2016,2017,2018,2020,2021,2022);
+		final int daysNumber = 32;
+		final int monthNumber = 13;
+		final int yearNumber = 2030;
+		ArrayList<Integer> daysArray = new ArrayList<Integer>();
+		ArrayList<Integer> monthArray = new ArrayList<Integer>();
+		ArrayList<Integer> yearArray = new ArrayList<Integer>();
+		for(int i=1;i<daysNumber;i++){
+			daysArray.add(i);
+		}
+		for(int i=1;i<monthNumber;i++){
+			monthArray.add(i);
+		}
+		for(int i=2010;i<yearNumber;i++){
+			yearArray.add(i);
+		}
+		final ObservableList<Integer> days = FXCollections.observableArrayList(daysArray);
+		final ObservableList<Integer> months = FXCollections.observableArrayList(monthArray);
+		final ObservableList<Integer> years = FXCollections.observableArrayList(yearArray);
 		day.setItems(days);
 		month.setItems(months);
 		year.setItems(years);
-		day.setValue(days.get(0));
-		month.setValue(months.get(0));
-		year.setValue(years.get(0));
+		Integer cuurentMonth = (Calendar.getInstance().get(Calendar.MONTH) + 1); 
+		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR) ;
+		Integer currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		day.setValue(currentDay);
+		month.setValue(cuurentMonth);
+		year.setValue(currentYear);
 
 	}
 
