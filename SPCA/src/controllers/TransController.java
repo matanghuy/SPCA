@@ -251,7 +251,7 @@ public class TransController implements Initializable{
 	}
 
 	@FXML
-	public void save() {
+	public void save(ActionEvent event) {
         if (validateInputs()) {
             TransactionType type = cbTransactionType.getSelectionModel().getSelectedItem();
             try {
@@ -260,6 +260,7 @@ public class TransController implements Initializable{
                 int transId = createTransaction(type, contactId, animalId);
                 addTransactionItems(transId);
                 createPayments(transId);
+                ((Node)(event.getSource())).getScene().getWindow().hide();
             } catch (SQLException e) {
                 logger.error("Failed to crate transaction", e);
                 e.getErrorCode();

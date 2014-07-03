@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -43,7 +44,8 @@ public class StatusController implements Initializable{
 	@FXML private Text endLabel;
 	@FXML private Text startField;
 	@FXML private Text endField;
-	
+
+    private static final Logger logger = Logger.getLogger(StatusController.class);
 	DataContext layerFactory;
 	private ObservableList<StatusByMonth> statusByMonth;
 	private final String datePattern = "dd/MM/yyyy";
@@ -59,8 +61,7 @@ public class StatusController implements Initializable{
 		try {
 			layerFactory = SpcaDataLayerFactory.getDataContext();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to get data context", e);
 		}
 		initComboBox();
 		initTransactionType();
@@ -75,12 +76,8 @@ public class StatusController implements Initializable{
 			for(int i=0;i<size;i++){
 				transactionTypeMap.put(data[i].getString(1), i+1);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException | IOException e) {
+            logger.error("Failed to get transaction types from database", e);
 		}
 	}
 	private void initComboBox(){
@@ -130,33 +127,24 @@ public class StatusController implements Initializable{
 			javaDate = formatter.parse(endDate);
 			end = new Timestamp(javaDate.getTime());
 			
-			System.out.println(start);
-			System.out.println(end);
-			
 			DataResult data3 = layerFactory.getBalanceTarget(null, start,end);
 			ArrayList<String> nameNotChecked = new ArrayList<String>();
 			ArrayList<Integer> totalDestination = new ArrayList<Integer>();
 			ArrayList<Integer> totalAmountToPaySum = new ArrayList<Integer>();
 			ArrayList<Integer> totalDifferenceSum = new ArrayList<Integer>();
 			for(int i=0;i<data3.getRows().length;i++){
-				System.out.println(data3.getRows()[i].getObject("Name"));
-				System.out.println(data3.getRows()[i].getObject("Amount"));
 				nameNotChecked.add((String) data3.getRows()[i].getObject("Name"));
 				totalDestination.add((Integer)((BigDecimal)data3.getRows()[i].getObject("Amount")).intValue());
 			}
-			//boolean isFound = false;
+
 			
-			
-			DataResult data5 = layerFactory.getTransactions(null,
-					null, null, null, null, null,
+			DataResult data5 = layerFactory.getTransactions(null,null, null, null, null, null,
 					null, start, end, null); 
 			
 			for(int i=0;i<nameNotChecked.size();i++){
 				Integer sum = 0;
 				for (int j = 0;j < data5.getRows().length; j++) {
-					//System.out.println(data5.getRows()[j].getObject("TotalAmountToPay"));
 					String typeName =(String) ((data5.getRows()[j].getObject("TransactionTypeName")));
-					System.out.println(typeName);
 					if(typeName.equals(nameNotChecked.get(i))){
 						Object payment = ((data5.getRows()[j].getObject("TotalAmountToPay")));
 						if(payment != null){
@@ -168,8 +156,6 @@ public class StatusController implements Initializable{
 				totalDifferenceSum.add((sum - totalDestination.get(i)));
 				this.statusByMonth.add(createStatusByMonth(nameNotChecked.get(i),
 						totalDestination.get(i),totalAmountToPaySum.get(i),totalDifferenceSum.get(i)));
-				System.out.println("name is : "+nameNotChecked.get(i) + "destination is: "+totalDestination.get(i)+
-						" total payed is: "+totalAmountToPaySum.get(i) + " difference is : "+totalDifferenceSum.get(i));
 			}
 			
 			
@@ -180,11 +166,9 @@ public class StatusController implements Initializable{
 			endField.setText(endDate);
 			endField.setVisible(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+               logger.error("Error occurred while getting data from database", e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error occurred while parsing dates", e);
 		}
 	}
 	
@@ -195,8 +179,7 @@ public class StatusController implements Initializable{
 		status.setSubject((String)(name));
 		status.setDestination((String)(destination + ""));
 		status.setTotal((String)(AmountToPay + ""));
-		System.out.println(status);
-		
+
 		return status;
 	}
 	

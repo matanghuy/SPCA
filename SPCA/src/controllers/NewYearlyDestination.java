@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -10,8 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
-import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
 import javafx.collections.FXCollections;
@@ -25,7 +24,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class NewYearlyDestination implements Initializable{
-	@FXML private ChoiceBox<String> category;
+
+    private static final Logger logger = Logger.getLogger(NewYearlyDestination.class);
+    @FXML private ChoiceBox<String> category;
 	@FXML private TextField year;
 	@FXML private TextField destination;
 	@FXML private Label wrongInput;
@@ -48,12 +49,12 @@ public class NewYearlyDestination implements Initializable{
 		
 	}
 	private void fillExpensesTypes(){
-		ArrayList<String> type = fillTypersFromDb();
+		ArrayList<String> type = fillTypesFromDb();
 		ObservableList<String> types = FXCollections.observableArrayList(type);
 		category.setItems(types);
 		category.setValue(category.getItems().get(0));
 	}
-	private ArrayList<String> fillTypersFromDb(){
+	private ArrayList<String> fillTypesFromDb(){
 		ArrayList<String> typeName = null;
 		typeName = new ArrayList<String>();
 		try {
@@ -63,12 +64,8 @@ public class NewYearlyDestination implements Initializable{
 			for(int i=0;i<size;i++){
 				typeName.add(data[i].getString(1));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException | IOException e) {
+			logger.error("Error occurred while getting data from database", e);
 		}
 		return typeName;
 	}
@@ -95,45 +92,28 @@ public class NewYearlyDestination implements Initializable{
 				startDateString = day + "/" + smonth + "/" + year.getText();
 				endDateString = day + "/" + emonth + "/" + year.getText();
 				formatter = new SimpleDateFormat(datePattern);
-				System.out.println(startDateString);
-				System.out.println(endDateString);
 				try {
 					java.util.Date javaDate = formatter.parse(startDateString);
 					startDate = new Timestamp(javaDate.getTime());
 					javaDate = formatter.parse(endDateString);
 					endDate = new Timestamp(javaDate.getTime());
-					System.out.println("start time: " + startDate
-							+ " end time : " + endDate);
 					destinationInt = Integer.parseInt(destination.getText());
 					categoeyFinalName = getCategoryFinalName();
-				//	System.out.println(categoeyFinalName);
-					wirteToDb();
-					
-					/*DataResult data3 = layerFactory.getBalanceTarget(null, startDate,endDate);
-					for(int i=0;i<data3.getRows().length;i++){
-						System.out.println(data3.getRows()[i].getObject("Name"));
-						if(((String)(data3.getRows()[i].getObject("Name"))).startsWith("תקציב")){
-							System.out.println(data3.getRows()[i].getObject("Name"));
-						}
-						System.out.println(data3.getRows()[i].getObject("Amount"));
-					}*/
-					
-					
+					writeToDb();
 					wrongInput.setText("");
 					((Node)event.getSource()).getScene().getWindow().hide();
 				} catch (ParseException e) {
-					e.printStackTrace();
+					logger.error("Error occurred while parsing dates", e);
 				}
 			}
 		}
 	}
-	private void wirteToDb(){
+	private void writeToDb(){
 		try {
 			layerFactory.addBalanceTarget(startDate, endDate, destinationInt, categoeyFinalName);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            logger.error("Error occurred while getting data from database", e);
+        }
 	}
 	private String getCategoryFinalName(){
 		return nameForamt + category.getValue() +" "+ year.getText();

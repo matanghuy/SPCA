@@ -36,6 +36,7 @@ public class addTransactionType implements Initializable{
         List<TransactionType> transactionTypes = CommonUtils.getTransactionTypes();
         ObservableList<TransactionType> typeObservableList = FXCollections.observableArrayList(transactionTypes);
         category.setItems(typeObservableList);
+        category.setValue(category.getItems().get(0));
 
 
     }

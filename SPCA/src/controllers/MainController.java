@@ -69,7 +69,6 @@ public class MainController implements Initializable {
 	private void createNewWindow(String windowName) {
 		try {
 			Stage dialog = new Stage();
-			System.out.println(getClass().getResource("../fxml/"+windowName));
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/"+windowName));
 			Parent root = (Parent) loader.load();
 			Scene scene = new Scene(root, 1000, 800);

@@ -2,7 +2,6 @@ package controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataRow;
 import spca.datalayer.SpcaDataLayerFactory;
@@ -27,7 +27,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class NewDestination implements Initializable{
-	
+
+    private static final Logger logger = Logger.getLogger(NewDestination.class);
 	private final String day = "1";
 	private final String datePattern = "dd/MM/yyyy";
 	private SimpleDateFormat formatter;
@@ -45,7 +46,7 @@ public class NewDestination implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		intializeMonth();
+		initializeMonth();
 		fillExpensesTypes();
 		
 	}
@@ -65,16 +66,12 @@ public class NewDestination implements Initializable{
 			for(int i=0;i<size;i++){
 				typeName.add(data[i].getString(1));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException | IOException e) {
+            logger.error("Error occurred while fetching data from database",e);
 		}
 		return typeName;
 	}
-	private void intializeMonth(){
+	private void initializeMonth(){
 		ArrayList<String> monthArray = new ArrayList<String>();
 
 		for (int i = 1; i < 13; i++) {
@@ -88,7 +85,7 @@ public class NewDestination implements Initializable{
 	@FXML
 	public void send(ActionEvent event){
 		boolean isOk = false;
-		isOk = checkValidtation();
+		isOk = checkValidation();
 		if(isOk){
 			int endMonth = Integer.parseInt(month.getValue());
 			int endYear = Integer.parseInt(year.getText()); 
@@ -109,14 +106,11 @@ public class NewDestination implements Initializable{
 				startDate = new Timestamp(javaDate.getTime());
 				javaDate = formatter.parse(endDateString);
 				endDate = new Timestamp(javaDate.getTime());
-				System.out.println("start time: "+ startDate + " end time : "+ endDate);
 				destinationInt = Integer.parseInt(destination.getText());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			wirteToDb();
-			System.out.println("send the data to the db year: "+year.getText()
-					+" month "+month.getValue()+" destination "+destination.getText());
 			wrongInput.setText("");
 			((Node)event.getSource()).getScene().getWindow().hide();
 		}
@@ -130,16 +124,13 @@ public class NewDestination implements Initializable{
 			try {
 		layerFactory = SpcaDataLayerFactory.getDataContext();
 		layerFactory.addBalanceTarget(startDate, endDate, destinationInt, category.getValue());
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	} catch (SQLException | IOException e) {
+		logger.error("Error ocurred while fetching data from database", e);
+
 	}
 		
 	}
-	private boolean checkValidtation(){
+	private boolean checkValidation(){
 		String yearText = year.getText();
 		String destinationText = destination.getText();
 		if (!(Pattern.matches("[a-zA-Z]+", yearText)) && yearText.length()== 4){

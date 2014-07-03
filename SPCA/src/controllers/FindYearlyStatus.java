@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import beans.Contact;
 import beans.Month;
 import beans.StatusByYear;
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -30,6 +31,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class FindYearlyStatus implements Initializable{
 
+    private static final Logger logger = Logger.getLogger(FindYearlyStatus.class);
 	@FXML private ComboBox<String> yearStart;
 	@FXML private TableColumn<StatusByYear, String> category;
 	@FXML private TableColumn<StatusByYear, String> jan;
@@ -70,8 +72,7 @@ public class FindYearlyStatus implements Initializable{
 		try {
 			layerFactory = SpcaDataLayerFactory.getDataContext();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Can't get data context", e);
 		}
 		status = FXCollections.observableArrayList();
 		table.setItems(status);
@@ -133,11 +134,7 @@ public class FindYearlyStatus implements Initializable{
 			startDate = new Timestamp(javaDate.getTime());
 			javaDate = formatter.parse(endDateString);
 			endDate = new Timestamp(javaDate.getTime());
-			System.out.println("start time: "+ startDate + " end time : "+ endDate);
 			data3 = layerFactory.getBalanceTarget(null, startDate, endDate);
-			for (int i = 0; i < data3.getColumnNames().length; i++) {
-				System.out.println(data3.getColumnNames()[i]);
-			}
 			for (int i = 0; i < data3.getRows().length; i++) {
 				if (!((String) (data3.getRows()[i].getObject("Name"))).startsWith("תקציב יעד שנתי")) {
 					String category = (String) (data3.getRows()[i].getObject("Name"));
@@ -156,13 +153,9 @@ public class FindYearlyStatus implements Initializable{
 
 						Integer monthInText = Integer.parseInt(monthString.substring(monthString.length() - 5,
 									monthString.length() - 3)) - 1;
-						System.out.println(monthInText);
 						Integer amount = (Integer) (((BigDecimal) (data3.getRows()[i].getObject("Amount"))).intValue());
 						monthes[monthInText].addAmountToCategory(category,amount);
 					}
-					System.out.println(data3.getRows()[i].getObject("StartDate"));
-					System.out.println(data3.getRows()[i].getObject("Name"));
-					System.out.println(data3.getRows()[i].getObject("Name"));
 
 				}
 				else{
@@ -180,10 +173,9 @@ public class FindYearlyStatus implements Initializable{
 		
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("Error occurred while parsing dates", e);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error("Error occurred while getting data from database");
 		} 
 	}
 	private StatusByYear CreateRow(String category) {
@@ -202,8 +194,6 @@ public class FindYearlyStatus implements Initializable{
 		statusByYear.setNovember(monthes[10].getSumPerCategory(category)+"");
 		statusByYear.setDecember(monthes[11].getSumPerCategory(category)+"");
 		statusByYear.setCounter(getCounterForCategory(category));
-		System.out.println(budgetPerYear.get("תשלום דמי חבר"));
-		System.out.println(category);
 		statusByYear.setDestination(budgetPerYear.get(category)+"");
 		return statusByYear;
 	}

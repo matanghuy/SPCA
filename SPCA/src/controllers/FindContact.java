@@ -14,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -26,6 +27,7 @@ import java.util.*;
 
 public class FindContact implements Initializable {
 
+    private static final Logger logger = Logger.getLogger(FindContact.class);
 	@FXML
 	TextField findName;
 	@FXML
@@ -175,21 +177,21 @@ public class FindContact implements Initializable {
 				this.contacts.add(createContact(contactsRows[i]));
 			}
 		}catch(SQLException e) {
-			System.out.println("Error while getting data from database" + e.getMessage());
+			logger.error("Error while getting data from database" ,e);
 		}
 	}
 	
 	private Contact createContact(DataRow row) {
 		Contact contact = new Contact();
-		contact.setFirstName((String)row.getObject("FirstName"));
-		contact.setLastName((String)row.getObject("LastName"));
-		contact.setPhone1((String)row.getObject("Phone_1"));
-		contact.setPhone2((String)row.getObject("Phone_2"));
-		contact.setEmail1((String)row.getObject("Email_1"));
-		contact.setEmail2((String)row.getObject("Email_2"));
-		contact.setAddress((String)row.getObject("Address"));
-		contact.setCity((String)row.getObject("CityName"));
-		contact.setType((String)row.getObject("ContactTypeNames"));
+		contact.setFirstName((String) row.getObject("FirstName"));
+		contact.setLastName((String) row.getObject("LastName"));
+		contact.setPhone1((String) row.getObject("Phone_1"));
+		contact.setPhone2((String) row.getObject("Phone_2"));
+		contact.setEmail1((String) row.getObject("Email_1"));
+		contact.setEmail2((String) row.getObject("Email_2"));
+		contact.setAddress((String) row.getObject("Address"));
+		contact.setCity((String) row.getObject("CityName"));
+		contact.setType((String) row.getObject("ContactTypeNames"));
         contact.setId((Integer)row.getObject("ContactId"));
 
 		return contact;

@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 import beans.Contact;
 import beans.PaymentReport;
 import beans.StatusByYear;
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -30,7 +31,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PaymentTypeReport implements Initializable{
-	
+
+    private static final Logger logger = Logger.getLogger(PaymentTypeReport.class);
 	@FXML ComboBox year;
 	@FXML ComboBox month;
 	@FXML TableView<PaymentReport> table;
@@ -50,8 +52,7 @@ public class PaymentTypeReport implements Initializable{
 			table.setItems(report);
 			layerFactory = SpcaDataLayerFactory.getDataContext();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error occurred while connecting to database", e);
 		}
 		initTable();
 		initalizeDates();

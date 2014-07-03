@@ -26,7 +26,7 @@ public class CommonUtils {
         try {
             dataContext = getDataContext();
         } catch(IOException e) {
-            System.out.println("Cannot get data context");
+            logger.error("Cannot get data context", e);
         }
     }
 	public static void initializeCity(){
