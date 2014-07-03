@@ -48,6 +48,7 @@ public class FindAnimal implements Initializable{
             logger.error("Can not get data context", e);
         }
         initTable();
+        TransController.setAnimal(null);
     }
 
     private void initTable() {
@@ -85,7 +86,7 @@ public class FindAnimal implements Initializable{
 
     @FXML
     public void accept(ActionEvent event) {
-        CommonUtils.animal = tableAnimals.getSelectionModel().getSelectedItem();
+        TransController.setAnimal(tableAnimals.getSelectionModel().getSelectedItem());
         ((Node)event.getSource()).getScene().getWindow().hide();
 
     }

@@ -1,4 +1,5 @@
 package controllers;
+import beans.Animal;
 import beans.Contact;
 import beans.TransactionItem;
 import beans.TransactionType;
@@ -49,12 +50,15 @@ public class TransController implements Initializable{
 	@FXML private Label fullAddress;
 	@FXML private Label phoneNumber;
 	@FXML private Label email;
-	@FXML private Label lblTotalToPay;
+	@FXML private Label lblAnimalType;
+    @FXML private Label lblAnimalName;
+    @FXML private Label lblTotalToPay;
 	@FXML private Label lblTotalPaid;
 	@FXML private ToggleGroup contactType;
 	@FXML private Button btnLookContact;
 	@FXML private Button btnNewContact;
 	@FXML private Button btnAddItem;
+    @FXML private Button btnSave;
 	@FXML private TextField tfItem;
 	@FXML private TextField tfCost;
     @FXML private TextField tfItemComment;
@@ -63,6 +67,7 @@ public class TransController implements Initializable{
 	@FXML private TextField tfCredit;
     @FXML private TextField tfTransfer;
 
+
 	@FXML private RadioButton rbContactTrue;
 	@FXML private RadioButton rbContactFalse;
 	@FXML private TableView<TransactionItem> tableView;
@@ -70,12 +75,14 @@ public class TransController implements Initializable{
 	@FXML private TableColumn<TransactionItem, Double> colItemCost;
     @FXML private TableColumn<TransactionItem, String> colItemComment;
 
+    private static Contact currentContact;
+    private static Animal currentAnimal;
+
     private ObservableList<TransactionType> transactionTypesList;
     private ObservableList<TransactionItem> transactionItemsList;
     private Map<String, Integer> paymentTypes;
-	private int contactId;
 	DataContext dataContext;
-
+    /* Start Initialization*/
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
@@ -84,14 +91,14 @@ public class TransController implements Initializable{
 			e.printStackTrace();
 		}
         initPaymentTypes();
-        CommonUtils.contact = null;
+
+        currentContact = null;
+        currentAnimal = null;
         transactionTypesList = FXCollections.observableArrayList();
 		initDateBoxes();
 		initTransactionTypes();
 		initItemsTable();
-
 	}
-
 
     private void initPaymentTypes() {
         paymentTypes = new HashMap<String, Integer>();
@@ -100,9 +107,8 @@ public class TransController implements Initializable{
             for(DataRow row : result.getRows()) {
                 paymentTypes.put(((String)row.getObject("Name")).trim(), (Integer)row.getObject("ID"));
             }
-            System.out.println(paymentTypes);
         }catch (Exception e) {
-
+            logger.error("Couldn't get payment types from database", e);
         }
     }
 
@@ -152,26 +158,14 @@ public class TransController implements Initializable{
         cbTransactionType.setItems(transactionTypesList);
 		cbTransactionType.setValue(cbTransactionType.getItems().get(0));
 	}
-	@FXML
-	private void newContact(ActionEvent event){
-   		  StringBuilder st = new StringBuilder();
-	        st.append(event.getSource());
-	        int start = st.indexOf("id")+3;
-	        int stop = st.indexOf(",");
-	        String name = st.substring(start, stop);
-	        switch(name){
-	        case "btnLookContact" : findContact();break;
-	        case "btnNewContact": addContact(); break;
-	        case "btnExit" : System.exit(1);
-	        default : System.out.println("not found");
+	/* End of Initialization*/
 
-	        }
-	}
 
+    @FXML
 	private void findContact(){
 		openDialog("Find Contact","/fxml/FindContact.fxml");
 	}
-
+    @FXML
 	private void addContact() {
 		openDialog("Add Contact", "/fxml/AddContact.fxml");
 	}
@@ -179,9 +173,10 @@ public class TransController implements Initializable{
     public void attachAnimal() {
         openDialog("Select Animal", "../fxml/FindAnimal.fxml");
     }
-	private void openDialog(String title, String fxml) {
+
+
+    private void openDialog(String title, String fxml) {
 		try {
-			CommonUtils.contact = null;
             Stage dialog = new Stage();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
 			Parent root = (Parent)loader.load();
@@ -192,7 +187,7 @@ public class TransController implements Initializable{
             dialog.setOnHidden(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    setDisplayedContact(CommonUtils.contact);
+                    refreshFields();
                 }
             });
 			dialog.show();
@@ -200,9 +195,10 @@ public class TransController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	@FXML
+
+
+    @FXML
 	private void handleAddItem() {
-		 try {
              TransactionItem item = new TransactionItem(tfItem.getText(),
                      Double.parseDouble(tfCost.getText()), tfItemComment.getText());
 			 transactionItemsList.add(item);
@@ -210,10 +206,13 @@ public class TransController implements Initializable{
 			 tfItem.setText("");
 			 tfCost.setText("");
 			 updateTotal();
-		 } catch(NumberFormatException e) {
-			//TODO: pop error message
-		 }
 	}
+
+    @FXML
+    public void handleRemoveItem() {
+        transactionItemsList.remove(tableView.getSelectionModel().getSelectedItem());
+        updateTotal();
+    }
 
 	private void updateTotal() {
 		double sum = 0;
@@ -223,18 +222,14 @@ public class TransController implements Initializable{
 		lblTotalToPay.setText(String.valueOf(sum));
 	}
 
-	@FXML
-	public void handleRemoveItem() {
-        transactionItemsList.remove(tableView.getSelectionModel().getSelectedItem());
-        updateTotal();
-	}
+
 
 	@FXML
 	public void handleRadios() {
 		RadioButton selected = (RadioButton)contactType.getSelectedToggle();
 		if(selected.equals(rbContactFalse)) {
-			resetFields();
-            CommonUtils.contact = null;
+            currentContact = null;
+			resetContactFields();
 			setButtonsDisabled(true);
 		} else {
 			setButtonsDisabled(false);
@@ -243,12 +238,15 @@ public class TransController implements Initializable{
 	}
 	@FXML
 	public void paymentChanged() {
-		double sum = parseText(tfCash) + parseText(tfCheck) + parseText(tfCredit) + parseText(tfTransfer);
+		double sum = parseCostsTextFields(tfCash) + parseCostsTextFields(tfCheck)
+                + parseCostsTextFields(tfCredit) + parseCostsTextFields(tfTransfer);
 		lblTotalPaid.setText(String.valueOf(sum));
 		if (sum > Double.parseDouble(lblTotalToPay.getText())) {
 			lblTotalPaid.setTextFill(Paint.valueOf("RED"));
+            btnSave.setDisable(true);
 		} else {
 			lblTotalPaid.setTextFill(Paint.valueOf("BLACK"));
+            btnSave.setDisable(false);
 		}
 	}
 
@@ -257,15 +255,32 @@ public class TransController implements Initializable{
         if (validateInputs()) {
             TransactionType type = cbTransactionType.getSelectionModel().getSelectedItem();
             try {
-                int transId = createTransaction(type, CommonUtils.contact.getId());
+                int contactId = currentContact == null ? null : currentContact.getId();
+                int animalId = currentAnimal == null ? null : currentAnimal.getId();
+                int transId = createTransaction(type, contactId, animalId);
                 addTransactionItems(transId);
                 createPayments(transId);
             } catch (SQLException e) {
-                logger.error("Failed to crate transaction: ContactID= " + contactId, e);
+                logger.error("Failed to crate transaction", e);
                 e.getErrorCode();
                 e.getSQLState();
             }
         }
+    }
+    @FXML
+    public void cancel(ActionEvent event) {
+        currentAnimal = null;
+        currentContact = null;
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+    }
+
+    /* Transaction creation */
+    private int createTransaction(TransactionType type, Integer contactId, Integer AnimalId) throws SQLException {
+        contactId = contactId == -1 ? null : contactId;
+        DataResult result = dataContext.addTransaction(contactId, AnimalId, type.getId(), null, null, null);
+        int transId = (int)result.getReturnValue();
+        logger.info("Transaction created with id: " + transId);
+        return transId;
     }
 
     private void addTransactionItems(int transId) throws SQLException{
@@ -281,32 +296,25 @@ public class TransController implements Initializable{
         Double check = tfCheck.getText().equals("") ? 0 : Double.parseDouble(tfCheck.getText());
         Double transfer = tfTransfer.getText().equals("") ? 0 : Double.parseDouble(tfTransfer.getText());
         if (cash > 0) {
-            dataContext.addPayment(transId, paymentTypes.get("מזומן"), cash.intValue());
+            DataResult result = dataContext.addPayment(transId, paymentTypes.get("מזומן"), cash.intValue());
+            logger.debug("Payment added. Payment ID: " + result.getReturnValue());
         }
         if (credit > 0) {
-            dataContext.addPayment(transId, paymentTypes.get("אשראי"), credit.intValue());
+            DataResult result = dataContext.addPayment(transId, paymentTypes.get("אשראי"), credit.intValue());
+            logger.debug("Payment added. Payment ID: " + result.getReturnValue());
         }
         if (check > 0) {
-            dataContext.addPayment(transId, paymentTypes.get("צ'ק"), check.intValue());
+            DataResult result = dataContext.addPayment(transId, paymentTypes.get("צ'ק"), check.intValue());
+            logger.debug("Payment added. Payment ID: " + result.getReturnValue());
         }
         if(transfer > 0) {
-            dataContext.addPayment(transId, paymentTypes.get("העברה בנקאית"), transfer.intValue());
+            DataResult result = dataContext.addPayment(transId, paymentTypes.get("העברה בנקאית"), transfer.intValue());
+            logger.debug("Payment added. Payment ID: " + result.getReturnValue());
         }
     }
+        /* End of Transaction creation */
 
-    private int createTransaction(TransactionType type, Integer contactId) throws SQLException {
-        contactId = contactId == -1 ? null : contactId;
-        DataResult result = dataContext.addTransaction(contactId, null, type.getId(), null, null, null);
-        int transId = (int)result.getReturnValue();
-        logger.info("Transaction created with id: " + transId);
-        return transId;
-    }
-
-	@FXML
-	public void cancel(ActionEvent event) {
-		((Node)(event.getSource())).getScene().getWindow().hide();
-	}
-	private boolean validateInputs() {
+    private boolean validateInputs() {
         if(!lblTotalPaid.getText().equals(lblTotalToPay.getText())) {
             logger.warn("You cannot leave unpaid costs");
             return false;
@@ -315,15 +323,21 @@ public class TransController implements Initializable{
             logger.warn("Transaction must have at least one item ");
             return false;
         }
-        if(CommonUtils.contact.getId() < 0  && rbContactTrue.isSelected()) {
+        if(currentContact.getId() < 0  && rbContactTrue.isSelected()) {
             logger.warn("Choose contact or select 'Without Contact'");
             return false;
         }
         return true;
     }
 
-    public void setDisplayedContact(Contact contact) {
+    private void refreshFields() {
+        displayAnimal(currentAnimal);
+        displayContact(currentContact);
+    }
+
+    private void displayContact(Contact contact) {
         if(contact == null) {
+            resetContactFields();
             return;
         }
         fullName.setText(contact.getFullName());
@@ -332,25 +346,39 @@ public class TransController implements Initializable{
         email.setText(contact.getEmail1());
     }
 
+    private void displayAnimal(Animal animal) {
+        if(animal == null) {
+            resetAnimalFields();
+            return;
+        }
+        lblAnimalName.setText(animal.getName());
+        lblAnimalType.setText(animal.getType());
+    }
 
-	private double parseText(TextField field) {
+
+	private double parseCostsTextFields(TextField field) {
 		String text = field.getText();
 		if(text.isEmpty())
 			return 0;
 		try {
 		  return Double.parseDouble(text);
 		} catch(NumberFormatException e) {
+            logger.warn("This field accept only numbers");
 			field.setText("");
 			return 0;
 		}
 	}
 
-	private void resetFields() {
+	private void resetContactFields() {
 		fullName.setText("");
 		phoneNumber.setText("");
 		fullAddress.setText("");
 		email.setText("");
 	}
+    private void resetAnimalFields() {
+        lblAnimalName.setText("");
+        lblAnimalType.setText("");
+    }
 
 	private void setButtonsDisabled(boolean status) {
 		btnLookContact.disableProperty().setValue(status);
@@ -358,8 +386,17 @@ public class TransController implements Initializable{
 	}
 
 
+    public void removeAnimal() {
+        currentAnimal = null;
+        resetAnimalFields();
+    }
 
-
+    public static void setContact(Contact contact) {
+        currentContact = contact;
+    }
+    public static void setAnimal(Animal animal) {
+        currentAnimal = animal;
+    }
 }
 
 

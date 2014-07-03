@@ -55,8 +55,8 @@
 		<Label fx:id="email"  			GridPane.columnIndex="2"	GridPane.rowIndex="2" />
 		<Label text="כתובת"  			GridPane.columnIndex="1"	GridPane.rowIndex="3" />
 		<Label fx:id="fullAddress" 		GridPane.columnIndex="2" 	GridPane.rowIndex="3" />
-		<Button fx:id="btnLookContact" text="חפש איש קשר" 	GridPane.columnIndex="0"	GridPane.rowIndex="0" GridPane.rowSpan="2" onAction="#newContact"/>
-		<Button fx:id="btnNewContact" text="איש קשר חדש" 	GridPane.columnIndex="0"	GridPane.rowIndex="2" GridPane.rowSpan="2" onAction="#newContact"/>
+		<Button fx:id="btnLookContact" text="חפש איש קשר" 	GridPane.columnIndex="0"	GridPane.rowIndex="0" GridPane.rowSpan="2" onAction="#findContact"/>
+		<Button fx:id="btnNewContact" text="איש קשר חדש" 	GridPane.columnIndex="0"	GridPane.rowIndex="2" GridPane.rowSpan="2" onAction="#addContact"/>
 	</GridPane>
 
 	<HBox spacing="15">
@@ -85,13 +85,20 @@
         <TableColumn text="הערות" fx:id="colItemComment"/>
     </columns>
     </TableView>
-    <HBox spacing="10">
-        <Button fx:id="addAnimal" text="שייך חיה" onAction="#attachAnimal"/>
-        <VBox>
-            <Label text="סוג:"/>
-            <Label fx:id="lblAnimalType"/>
-            <Label text="שם:"/>
-            <Label fx:id="lblAnimalName"/>
+    <HBox spacing="20">
+        <VBox spacing="10">
+            <Button fx:id="addAnimal" text="שייך חיה" onAction="#attachAnimal"/>
+            <Button fx:id="removeAnimal" text="הסר חיה" onAction="#removeAnimal"/>
+        </VBox>
+        <VBox spacing="10">
+            <HBox spacing="10">
+                <Label text="סוג:"/>
+                <Label fx:id="lblAnimalType"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="שם:"/>
+                <Label fx:id="lblAnimalName"/>
+            </HBox>
         </VBox>
 
     </HBox>
@@ -111,8 +118,8 @@
 
 	</GridPane>
 	<HBox alignment="CENTER" spacing="20">
-		<Button text="ביטול" minWidth="100" onAction="#cancel"/>
-		<Button text="שמור" minWidth="100" onAction="#save"/>
+		<Button fx:id="btnCancel" text="ביטול" minWidth="100" onAction="#cancel"/>
+		<Button fx:id="btnSave" text="שמור" minWidth="100" onAction="#save"/>
 	</HBox>
 
 

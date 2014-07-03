@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import beans.Contact;
 
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -28,9 +29,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 
+
 public class AddContact  implements Initializable{
 
-
+    private static final Logger logger = Logger.getLogger(AddContact.class);
 	@FXML TextField firstName;
 	@FXML TextField lastName;
 	@FXML TextField phoneNumber;
@@ -122,14 +124,11 @@ private ArrayList<String> fillTypesFromDb(){
 
 	@FXML
 	private void statusChange(KeyEvent event){
-
-		System.out.print(event.getSource());
 		StringBuilder st = new StringBuilder();
 		st.append(event.getSource());
 		int start = st.indexOf("id")+3;
 		int stop = st.lastIndexOf(",");
 		String name ="l" + st.substring(start,stop);
-		System.out.print(name);
 		switch(name){
 		case "llastName":
 		case "lfirstName":
@@ -214,8 +213,6 @@ private ArrayList<String> fillTypesFromDb(){
 		if(isValid()){
             Contact contact = createContact();
 			writeUserToDb(contact);
-            CommonUtils.contact = contact;
-			System.out.println("add to db");
 			validInput.setText("");
             ((Node)event.getSource()).getScene().getWindow().hide();
 		}
@@ -231,7 +228,6 @@ private ArrayList<String> fillTypesFromDb(){
         contact.setPhone1(phoneNumber.getText());
         contact.setEmail1(email.getText());
         contact.setCity(city.getText());
-        System.out.println(bDay.getValue() + "/" + bMonth.getValue() +"/" +bYear.getValue());
         contact.setBirthDay(bDay.getValue() + "/" + bMonth.getValue() +"/" +bYear.getValue());
         return contact;
     }
@@ -255,16 +251,15 @@ private ArrayList<String> fillTypesFromDb(){
             Timestamp startDate = new Timestamp(javaDate.getTime());
 			Integer cityNumber = CommonUtils.citiesMap.get(contact.getCity());
 
-
-
 			DataResult data = database.addOrUpdateContact(contact.getFirstName(), contact.getLastName(), contact.getPhone1()
 					, null, contact.getEmail1(), null , contact.getAddress(), cityNumber, null, identityNumber.getText(), startDate);
-			Integer returnValue = (Integer)data.getReturnValue();
-
-            database.addTypeForContact(returnValue, categoryMap.get(category.getValue()));
-
+			Integer contactId = (Integer)data.getReturnValue();
+            contact.setId(contactId);
+            TransController.setContact(contact);
+            database.addTypeForContact(contactId, categoryMap.get(category.getValue()));
+            logger.info("Contact has been successfully added to the database");
 		} catch (IOException | ParseException | SQLException e) {
-			e.printStackTrace();
+			logger.error("Error occurred while trying to add contact to database:" + contact.toString(), e);
 		}
 	}
 

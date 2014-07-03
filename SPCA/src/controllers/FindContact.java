@@ -67,6 +67,7 @@ public class FindContact implements Initializable {
 		getGroupsAndTypes();
 		initializeSelectOption();
 		initTable();
+        TransController.setContact(null);
 		contacts = FXCollections.observableArrayList();
 		tableContacts.setItems(contacts);
 		
@@ -196,7 +197,7 @@ public class FindContact implements Initializable {
 	@FXML
 	private void accept(ActionEvent event) {
 		Contact selected = tableContacts.getSelectionModel().getSelectedItem();
-        CommonUtils.contact = selected;
+        TransController.setContact(selected);
         ((Node)event.getSource()).getScene().getWindow().hide();
 
 	}
