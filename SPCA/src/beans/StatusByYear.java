@@ -16,6 +16,8 @@ public class StatusByYear {
 	private SimpleStringProperty october;
 	private SimpleStringProperty november;
 	private SimpleStringProperty december;
+	private SimpleStringProperty counter;
+	private SimpleStringProperty destination;
 	
 	public StatusByYear(){
 		this.category = new SimpleStringProperty();
@@ -31,82 +33,98 @@ public class StatusByYear {
 		this.october = new SimpleStringProperty();
 		this.november = new SimpleStringProperty();
 		this.december = new SimpleStringProperty();
+		counter = new SimpleStringProperty();
+		destination = new SimpleStringProperty();
 	}
+	public String getCounter() {
+		return counter.get() ;
+	}
+	public void setCounter(String counter) {
+		this.counter.set(counter);
+	}
+	public String getDestination() {
+		return destination.get() .equals("null") ? "0" : destination.get();
+	}
+	public void setDestination(String destination) {
+		this.destination.set(destination);
+	}
+	
+	
 	public String getCategory() {
-		return category.get();
+		return category.get() ;
 	}
 	public void setCategory(String category) {
 		this.category.set(category);
 	}
 	
 	public String getJanuary() {
-		return january.get();
+		return january.get().equals("null") ? "0" : january.get();
 	}
 	public void setJanuary(String january) {
 		this.january.set(january);
 	}
 	public String getFebruary() {
-		return february.get();
+		return february.get().equals("null") ? "0" : february.get();
 	}
 	public void setFebruary(String february) {
 		this.february.set(february);
 	}
 	public String getMarch() {
-		return march.get();
+		return march.get().equals("null") ? "0" :march.get();
 	}
 	public void setMarch(String march) {
 		this.march.set(march);
 	}
 	public String getApril() {
-		return april.get();
+		return april.get().equals("null") ? "0" : april.get();
 	}
 	public void setApril(String april) {
 		this.april.set(april);
 	}
 	public String getMay() {
-		return may.get();
+		return may.get().equals("null") ? "0" : may.get();
 	}
 	public void setMay(String may) {
 		this.may.set(may);
 	}
 	public String getJune() {
-		return june.get();
+		return june.get().equals("null") ? "0" : june.get();
 	}
 	public void setJune(String june) {
 		this.june.set(june);
 	}
 	public String getJuly() {
-		return july.get();
+		return july.get().equals("null") ? "0" : july.get();
 	}
 	public void setJuly(String july) {
 		this.july.set(july);
 	}
 	public String getAugust() {
-		return august.get();
+		return august.get().equals("null") ? "0" : august.get();
 	}
 	public void setAugust(String august) {
 		this.august.set(august);
 	}
 	public String getSeptember() {
-		return september.get();
+		return september.get().equals("null") ? "0" : september.get();
 	}
 	public void setSeptember(String september) {
 		this.september.set(september);
 	}
 	public String getOctober() {
-		return october.get();
+		return october.get().equals("null") ? "0" : october.get();
 	}
 	public void setOctober(String october) {
 		this.october.set(october);
 	}
 	public String getNovember() {
-		return november.get();
+		return november.get().equals("null") ? "0" : november.get();
 	}
 	public void setNovember(String november) {
 		this.november.set(november);
 	}
 	public String getDecember() {
-		return december.get();
+		return december.get().equals("null") ? "0" : december.get();
 	}
 	public void setDecember(String december) {
 		this.december.set(december);

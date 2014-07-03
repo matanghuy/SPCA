@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -43,6 +44,8 @@ public class FindYearlyStatus implements Initializable{
 	@FXML private TableColumn<StatusByYear, String> ock;
 	@FXML private TableColumn<StatusByYear, String> nov;
 	@FXML private TableColumn<StatusByYear, String> dez;
+	@FXML private TableColumn<StatusByYear, String> counter;
+	@FXML private TableColumn<StatusByYear, String> destination;
 	@FXML private TableView<StatusByYear> table;
 	
 	private final String day = "1";
@@ -60,6 +63,7 @@ public class FindYearlyStatus implements Initializable{
 	String[] monthNames = {"january", "february", "march", "april", "may", "june", "july", "august", "september",
 			"october", "november", "december"};
 	private ObservableList<StatusByYear> status;
+	HashMap<String,Integer> budgetPerYear = new HashMap<String,Integer>();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -114,9 +118,13 @@ public class FindYearlyStatus implements Initializable{
 			ock.setCellValueFactory(new PropertyValueFactory<StatusByYear, String>("october"));
 			nov.setCellValueFactory(new PropertyValueFactory<StatusByYear, String>("november"));
 			dez.setCellValueFactory(new PropertyValueFactory<StatusByYear, String>("december"));
+			counter.setCellValueFactory(new PropertyValueFactory<StatusByYear, String>("counter"));
+			destination.setCellValueFactory(new PropertyValueFactory<StatusByYear, String>("destination"));
+			
 	}
 	@FXML 
 	public void handleSearch(){
+		status.clear();
 		String startDateString,endDateString;
 		formatter = new SimpleDateFormat(datePattern);
 		startDateString = day + "/" + sMonth + "/" + yearStart.getValue();
@@ -132,10 +140,8 @@ public class FindYearlyStatus implements Initializable{
 				System.out.println(data3.getColumnNames()[i]);
 			}
 			for (int i = 0; i < data3.getRows().length; i++) {
-				if (!((String) (data3.getRows()[i].getObject("Name")))
-						.startsWith("תקציב")) {
-					String category = (String) (data3.getRows()[i]
-							.getObject("Name"));
+				if (!((String) (data3.getRows()[i].getObject("Name"))).startsWith("תקציב יעד שנתי")) {
+					String category = (String) (data3.getRows()[i].getObject("Name"));
 					Iterator<String> it = categoriesFound.iterator();
 					boolean notFound = true;
 					while (it.hasNext()) {
@@ -159,6 +165,15 @@ public class FindYearlyStatus implements Initializable{
 					System.out.println(data3.getRows()[i].getObject("Name"));
 					System.out.println(data3.getRows()[i].getObject("Name"));
 
+				}
+				else{
+					String category = (String) (data3.getRows()[i].getObject("Name"));
+					String budgetCategory = category.substring(category.indexOf("שנתי") + 4, category.length() - 4);
+					budgetCategory = budgetCategory.trim();
+					Integer budgetAmount = (Integer)(((BigDecimal) (data3.getRows()[i].getObject("Amount"))).intValue());
+					budgetPerYear.put(budgetCategory, budgetAmount);
+					System.out.println("year category is: "+ budgetCategory);
+					System.out.println("year budget is: "+ budgetAmount);
 				}
 
 			}
@@ -193,8 +208,20 @@ public class FindYearlyStatus implements Initializable{
 		statusByYear.setOctober(monthes[9].getSumPerCategory(category)+"");
 		statusByYear.setNovember(monthes[10].getSumPerCategory(category)+"");
 		statusByYear.setDecember(monthes[11].getSumPerCategory(category)+"");
-
+		statusByYear.setCounter(getCounterForCategory(category));
+		System.out.println(budgetPerYear.get("תשלום דמי חבר"));
+		System.out.println(category);
+		statusByYear.setDestination(budgetPerYear.get(category)+"");
 		return statusByYear;
+	}
+	private String getCounterForCategory(String category){
+		Integer sum = 0;
+		for(int i=0;i<monthes.length;i++){
+			Integer o = monthes[i].getSumPerCategory(category);
+			if(o != null)
+				sum += o;
+		}
+		return sum + "";
 	}
 
 }

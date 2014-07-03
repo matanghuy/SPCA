@@ -16,7 +16,7 @@
 		<Insets bottom="20" left="20" right="20" top="20" />
 	</padding>
    <children>
-   	<Label alignment="BASELINE_CENTER" text="דו״ח  שנתי" />
+   	<Label alignment="BASELINE_CENTER" text="דו״ח  שנתי הכנסות" />
    	<HBox id="datePane" spacing="10" alignment="CENTER">
       <children>
       		<Label id="date" alignment="BASELINE_CENTER" text="הכנס שנה" />
@@ -45,6 +45,8 @@
     		 <TableColumn fx:id="ock" text="אוקטובר" />
     		 <TableColumn fx:id="nov" text="נובמבר" />
     		 <TableColumn fx:id="dez" text="דצמבר" />
+    		  <TableColumn fx:id="counter" text="שנתי מצטבר" />
+    		  <TableColumn fx:id="destination" text="יעד" />
     		</columns>
       
       
