@@ -2,7 +2,6 @@ package controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -11,8 +10,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import beans.Contact;
 import beans.Transaction;
+import org.apache.log4j.Logger;
 import spca.datalayer.DataContext;
 import spca.datalayer.DataResult;
 import spca.datalayer.DataRow;
@@ -28,9 +27,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class incomingReport  implements Initializable{
+public class IncomingReport implements Initializable{
 	
-	
+	private static final Logger logger = Logger.getLogger(IncomingReport.class);
 	@FXML ComboBox category;
 	@FXML Button submit;
 	@FXML ComboBox yearStart;
@@ -114,13 +113,12 @@ public class incomingReport  implements Initializable{
 		
 	}
 	private void fillExpansesTypes() {
-		//TODO:here we need to get types from database
-		ArrayList<String> type = fillTypersFromDb();
+		ArrayList<String> type = fillTypesFromDb();
 		ObservableList<String> types = FXCollections.observableArrayList(type);
 		category.setItems(types);
 		category.setValue(category.getItems().get(0));
 	}
-	private ArrayList<String> fillTypersFromDb(){
+	private ArrayList<String> fillTypesFromDb(){
 		ArrayList<String> typeName = null;
 		typeName = new ArrayList<String>();
 		typeName.add("הכול");
@@ -133,11 +131,9 @@ public class incomingReport  implements Initializable{
 				transactionTypeMap.put(data[i].getString(1), i+1);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error occurred while getting data from database", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            logger.error("Error occurred while parsing dates", e);
 		}
 		return typeName;
 	}
@@ -145,48 +141,38 @@ public class incomingReport  implements Initializable{
 	public void handleSearch(ActionEvent event){
 		transaction.clear();
 		formatter = new SimpleDateFormat(datePattern);
-		String syear = yearStart.getValue().toString();
-		String smonth = monthStart.getValue().toString();
-		String sday = dayStart.getValue().toString();
-		System.out.println("year: "+syear+" month: "+smonth+" day: "+sday);
-		String startDateString = sday + "/" + smonth + "/" + syear;
+		String sYear = yearStart.getValue().toString();
+		String sMonth = monthStart.getValue().toString();
+		String sDay = dayStart.getValue().toString();
+		String startDateString = sDay + "/" + sMonth + "/" + sYear;
 		
-	
-		String eyear = yearEnd.getValue().toString();
-		String emonth = monthEnd.getValue().toString();
-		String eday = dayEnd.getValue().toString();
-		System.out.println("year: "+eyear+" month: "+emonth+" day: "+eday);
-		String endDateString =  eday + "/" + emonth+ "/" + eyear ;
+		String eYear = yearEnd.getValue().toString();
+		String eMonth = monthEnd.getValue().toString();
+		String eDay = dayEnd.getValue().toString();
+		String endDateString =  eDay + "/" + eMonth+ "/" + eYear ;
 		
 		String show = category.getValue().toString();
-		
-		
+
 		try {
 			
 			java.util.Date javaDate = formatter.parse(startDateString);
 			startTime = new Timestamp(javaDate.getTime());
 			javaDate = formatter.parse(endDateString);
 			endTime = new Timestamp(javaDate.getTime());
-			System.out.println(startTime);
-			System.out.println(endTime);
 			Integer typeSelect[] = new Integer[1];
 			if(show.equals("הכול"))
 				typeSelect = null;
 			else
 				typeSelect[0] = transactionTypeMap.get(show);
 			DataResult result = layerFactory.getTransactions(null, typeSelect, null, null,null, null, null, startTime,endTime,null);
-			System.out.println(result.getRows().length);
-		/*	for(int i=0;i<result.getColumnNames().length;i++){
-				System.out.println(result.getColumnNames()[i]);
-			}*/
-			
+
 			for(int i=0;i<result.getRows().length;i++){
 			this.transaction.add(creatTransaction(result.getRows()[i]));
 				
 			}
 				
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("General error", e);
 		}
 		
 		
