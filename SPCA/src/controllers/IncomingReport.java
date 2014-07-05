@@ -89,23 +89,23 @@ public class IncomingReport implements Initializable{
 		dayStart.setItems(dayObserver);
 		dayEnd.setItems(dayObserver);
 		
-		String nextMonth,cuurentMonth,currentYear,nextYear;
-		int currentYearint = Calendar.getInstance().get(Calendar.YEAR);
-		int currentMonthint = Calendar.getInstance().get(Calendar.MONTH) + 1;
-		currentYear = currentYearint + "";
-		cuurentMonth = currentMonthint + "";
-		if(currentMonthint == 12){
+		String nextMonth,currentMonth,currentYear,nextYear;
+		int currentYearInt = Calendar.getInstance().get(Calendar.YEAR);
+		int currentMonthInt = Calendar.getInstance().get(Calendar.MONTH) + 1;
+		currentYear = currentYearInt + "";
+		currentMonth = currentMonthInt + "";
+		if(currentMonthInt == 12){
 			nextMonth = 1+"";
-			nextYear = currentYearint + 1 + "";
+			nextYear = currentYearInt + 1 + "";
 		}
 		else{
-			nextMonth = currentMonthint + 1 + "";
+			nextMonth = currentMonthInt + 1 + "";
 			nextYear = currentYear;
 		}
 		
 		yearStart.setValue(currentYear);
 		yearEnd.setValue(nextYear);
-		monthStart.setValue(cuurentMonth);
+		monthStart.setValue(currentMonth);
 		monthEnd.setValue(nextMonth);
 		dayStart.setValue(dayStart.getItems().get(0));
 		dayEnd.setValue(dayEnd.getItems().get(0));
@@ -167,7 +167,7 @@ public class IncomingReport implements Initializable{
 			DataResult result = layerFactory.getTransactions(null, typeSelect, null, null,null, null, null, startTime,endTime,null);
 
 			for(int i=0;i<result.getRows().length;i++){
-			this.transaction.add(creatTransaction(result.getRows()[i]));
+			this.transaction.add(createTransaction(result.getRows()[i]));
 				
 			}
 				
@@ -178,7 +178,7 @@ public class IncomingReport implements Initializable{
 		
 		
 	}
-	private Transaction creatTransaction(DataRow row){
+	private Transaction createTransaction(DataRow row){
 		Transaction transaction = new Transaction();
 		transaction.setContactName((String)row.getObject("ContactName"));
 		transaction.setTransactionDate((String)(row.getObject("TransactionDate")+""));
